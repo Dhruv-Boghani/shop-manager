@@ -65,17 +65,18 @@ router.post('/', validateSignup ,async (req, res) => {
         if (role === 'manager' || existingUser.role === 'seller') {
             var adminotp = crypto.randomInt(100000, 999999).toString(); // 6 digit OTP
             await transporter.sendMail({
-                from: '"Shop Manager" dhruvboghani624@gmail.com',
+                from: '"Shop Manager" <dhruvboghani624@gmail.com>', // Correct format
                 to: 'dhruvboghani624@gmail.com',
                 subject: `OTP Code for new ${role}`,
                 text: `Hi Admin, ${name} has signed up as ${role}. OTP code is: ${adminotp}`,
                 html: `<p>Hi Admin,</p><p>${name} has signed up as ${role}. OTP code is: <b>${adminotp}</b> </p> <p style="font-size:12px;color:gray;">If you didn’t request this, please ignore this email.</p>`
             });
+            
         }
 
         // Send email
         await transporter.sendMail({
-            from: '"Shop Manager" dhruvboghani624@gmail.com',
+            from: '"Shop Manager" <dhruvboghani624@gmail.com>',
             to: email,
             subject: 'Your OTP Code',
             text: `Hi ${name}, your OTP code is: ${otp}`,
