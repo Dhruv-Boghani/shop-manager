@@ -34,7 +34,7 @@ router.get('/', async (req, res) => {
         if (!productMap[key]) {
           productMap[key] = {
             name: product.name || "Unnamed",
-            sku: product.sku || "no SKU",
+            sku: product.productSKU || "no SKU",
             buyPrice: product.buyPrice || 0,
             quantity: 1,
           };
