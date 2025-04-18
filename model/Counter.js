@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose'); // <-- THIS IS MISSING IN YOUR ERROR
 
 const counterSchema = new mongoose.Schema({
   name: {
