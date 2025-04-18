@@ -32,7 +32,7 @@
       <label for="cameraSelect" class="form-label">Select Camera</label>
       <select id="cameraSelect" class="form-select" style="max-width: 500px;"></select>
     </div>
-    
+
     <div class="form-section">
       <h5 class="mb-3">📷 QR / Barcode Scanner</h5>
       <div id="reader" style="width: 100%; max-width: 500px;"></div>
@@ -64,22 +64,27 @@
   </div>
 
   <script>
-    
     const beep = document.getElementById("beep-sound");
-    let scannedTags = new Set();
+    const cameraSelect = document.getElementById("cameraSelect");
     const lastResultEl = document.getElementById("lastResult");
     const tagTableBody = document.getElementById("tagTableBody");
-
+    const html5QrCode = new Html5Qrcode("reader");
+  
+    let scannedTags = new Set();
+    let barcodeBuffer = "";
+    let lastScanTime = Date.now();
+    let currentCameraId = null;
+  
     function playBeep() {
       beep.currentTime = 0;
       beep.play().catch((err) => console.warn("Beep play issue:", err));
     }
-
+  
     function addTagToTable(tagId) {
       if (scannedTags.has(tagId)) return;
       playBeep();
       scannedTags.add(tagId);
-
+  
       const row = document.createElement("tr");
       row.innerHTML = `
         <td>${scannedTags.size}</td>
@@ -89,27 +94,22 @@
       tagTableBody.appendChild(row);
       lastResultEl.textContent = tagId;
     }
-
+  
     function removeTag(tagId, btn) {
       scannedTags.delete(tagId);
       const row = btn.closest("tr");
       row.remove();
-
-      // Re-index the table
       Array.from(tagTableBody.rows).forEach((r, i) => {
         r.cells[0].textContent = i + 1;
       });
     }
-
+  
     // Barcode scanner via keyboard
-    let barcodeBuffer = "";
-    let lastScanTime = Date.now();
-
     document.addEventListener("keydown", function (e) {
       if (Date.now() - lastScanTime > 100) {
         barcodeBuffer = "";
       }
-
+  
       if (e.key === "Enter") {
         const scannedCode = barcodeBuffer.trim();
         if (scannedCode) {
@@ -119,78 +119,78 @@
       } else {
         barcodeBuffer += e.key;
       }
-
+  
       lastScanTime = Date.now();
     });
-
-    // QR Scanner
-  const cameraSelect = document.getElementById("cameraSelect");
-  let currentCameraId = null;
-    const html5QrCode = new Html5Qrcode("reader");
-
-    function startScanner(cameraId) {
-    html5QrCode.stop().catch(() => {}).finally(() => {
-      html5QrCode.start(
-        cameraId,
-        { fps: 10 },
-        (decodedText) => {
-          addTagToTable(decodedText.trim());
-        },
-        (errorMessage) => {
-          // Optional: console.log("QR error", errorMessage);
-        }
-      );
-    });
-  }
   
-    Html5Qrcode.getCameras().then(cameras => {
-      if (cameras && cameras.length) {
-        const cameraId = cameras[0].id;
+    // Start QR scanner
+    function startScanner(cameraId) {
+      html5QrCode.stop().catch(() => {}).finally(() => {
         html5QrCode.start(
           cameraId,
-          {
-            fps: 10
-            
-          },
+          { fps: 10 },
           (decodedText) => {
             addTagToTable(decodedText.trim());
           },
           (errorMessage) => {
-            // console.warn("QR Error", errorMessage);
+            // Optional: console.log("QR error", errorMessage);
           }
         );
+      });
+    }
+  
+    // Load cameras and initialize dropdown
+    Html5Qrcode.getCameras().then(cameras => {
+      if (cameras.length) {
+        cameras.forEach(cam => {
+          const option = document.createElement("option");
+          option.value = cam.id;
+          option.text = cam.label || `Camera ${cameraSelect.length + 1}`;
+          cameraSelect.appendChild(option);
+        });
+  
+        currentCameraId = cameras[0].id;
+        startScanner(currentCameraId);
+  
+        cameraSelect.addEventListener("change", () => {
+          const selectedId = cameraSelect.value;
+          if (selectedId !== currentCameraId) {
+            currentCameraId = selectedId;
+            startScanner(selectedId);
+          }
+        });
       }
     }).catch(err => {
       console.error("Camera error:", err);
     });
-
+  
     function makeBill() {
       const customerName = document.getElementById("customerName").value.trim() || "Unknown Customer";
       const mobileNo = document.getElementById("mobileNo").value.trim() || "Unknown Number";
       const totalAmount = document.getElementById("totalAmount").value;
-
+  
       if (!totalAmount) {
         alert("Please enter total amount.");
         return;
       }
-
+  
       if (scannedTags.size === 0) {
         alert("No tags scanned.");
         return;
       }
-
+  
       const tagIds = Array.from(scannedTags);
       const form = document.createElement("form");
       form.method = "POST";
       form.action = "/billing";
-
+  
       const inputs = {
         shopId: "<%= shopId %>",
         customerName,
         mobileNo,
         totalReceivingAmount: totalAmount,
       };
-
+  
       for (const key in inputs) {
         const input = document.createElement("input");
         input.type = "hidden";
@@ -198,7 +198,7 @@
         input.value = inputs[key];
         form.appendChild(input);
       }
-
+  
       tagIds.forEach(tagId => {
         const input = document.createElement("input");
         input.type = "hidden";
@@ -206,11 +206,12 @@
         input.value = tagId;
         form.appendChild(input);
       });
-
+  
       document.body.appendChild(form);
       form.submit();
     }
   </script>
+  
 </body>
 
 </html>
