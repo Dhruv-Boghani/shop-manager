@@ -16,7 +16,7 @@ const Shop = require('../../model/Shop');
 const { createCanvas, loadImage, registerFont } = require('canvas');
 
 // Register font
-registerFont(path.join(__dirname, '../../fonts/OpenSans-Regular.ttf'), {
+registerFont(path.join(__dirname, '../fonts/OpenSans-Regular.ttf'), {
   family: 'OpenSans',
 });
 
