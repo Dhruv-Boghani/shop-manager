@@ -62,11 +62,11 @@ async function generateBillCanvas(billId) {
   // Totals
   y += 20;
   ctx.font = "bold 16px Arial";
-  ctx.fillText(`Total Amount: ₹${bill.totalAmount}`, 40, y);
+  ctx.fillText(`Total Amount: Rs. ${bill.totalAmount}`, 40, y);
   y += 25;
-  ctx.fillText(`Received: ₹${bill.totalReceiveAmount}`, 40, y);
+  ctx.fillText(`Received: Rs. ${bill.totalReceiveAmount}`, 40, y);
   y += 25;
-  ctx.fillText(`Discount: ₹${bill.totalAmount - bill.totalReceiveAmount}`, 40, y);
+  ctx.fillText(`Discount: Rs. ${bill.totalAmount - bill.totalReceiveAmount}`, 40, y);
 
   // Return PDF buffer directly
   const buffer = canvas.toBuffer("application/pdf");

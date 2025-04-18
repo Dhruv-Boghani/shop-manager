@@ -69,7 +69,7 @@ async function generateTagImage(dataObj, tagDir) {
   ctx.fillText(`Product : ${dataObj.productName}`, 160, 60);
   ctx.fillText(`ID : ${dataObj.id}`, 160, 90);
   ctx.fillText(`Code : ${dataObj.code}`, 160, 120);
-  ctx.fillText(`Price : ₹${dataObj.price}`, 20, 170);
+  ctx.fillText(`Price : Rs. ${dataObj.price}`, 20, 170);
 
   // Draw barcode
   ctx.drawImage(barcodeImg, 180, 160, 360, 60);
