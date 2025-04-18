@@ -54,7 +54,7 @@ async function generateTagImage(dataObj, tagDir) {
 
   ctx.drawImage(qrImg, 20, 20, 120, 120);
   ctx.fillStyle = 'black';
-  ctx.font = 'bold 18px sans-serif';
+  ctx.font = 'bold 18px OpenSans';
   ctx.fillText(`Shop : ${dataObj.shopName}`, 160, 30);
   ctx.fillText(`Product : ${dataObj.productName}`, 160, 60);
   ctx.fillText(`ID : ${dataObj.id}`, 160, 90);
