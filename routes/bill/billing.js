@@ -59,18 +59,24 @@ router.post("/", validateBill, async (req, res) => {
       });
     }
   }
-  console.log("almost done", req.body)
-
-  const lastCount = await Counter.findOneAndDelete();
-  const prevValue = lastCount?.value || 0;
-
+  
+  const getNextCount = async (name) => {
+    let counter = await Counter.findOneAndUpdate(
+      { name },
+      { $inc: { value: 1 } },
+      { new: true, upsert: true }
+    );
+  
+    // Optional reset after 999
+    if (counter.value >= 1000) {
+      counter.value = 0;
+      await counter.save();
+    }
+  
+    return counter.value;
+  };
   // Increment and reset logic
-  const billno = (prevValue + 1) % 1000; // Reset to 0 after 999
-
-  const count = new Counter({ value: billno });
-  await count.save();
-
-  console.log("count", count);
+  const billno = await getNextCount(String(totalReceivingAmount));
 
   // product array
   const products = [];
