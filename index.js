@@ -16,8 +16,8 @@ const corsConfig = {
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-// const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/full-Shop-Manger'; // Replace with your MongoDB URI
-const MONGO_URI = 'mongodb+srv://dhruvboghani624:jQquPiMPGniQrb6T@kanishkastock.okpwf.mongodb.net/Shop-Manager?retryWrites=true&w=majority&appName=KanishkaStock' 
+const MONGO_URI = 'mongodb://localhost:27017/full-Shop-Manger'; // Replace with your MongoDB URI
+// const MONGO_URI = 'mongodb+srv://dhruvboghani624:jQquPiMPGniQrb6T@kanishkastock.okpwf.mongodb.net/Shop-Manager?retryWrites=true&w=majority&appName=KanishkaStock' 
 console.log(MONGO_URI);
 
 app.use(cors(corsConfig));
@@ -45,7 +45,7 @@ app.use(cookieParser()); // <== Add this line
 
 //routes
 app.use('/', require('./routes/home/home'));
-// app.use('/otp', require('./routes/signUp/otp'));
+app.use('/otp', require('./routes/signUp/otp'));
 app.use('/login', require('./routes/login/login'));
 app.use('/signup/otp', require('./routes/signUp/otp')); 
 app.use('/signup', require('./routes/signUp/signUp')); 

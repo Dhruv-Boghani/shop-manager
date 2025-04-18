@@ -19,6 +19,13 @@ const transporter = nodemailer.createTransport({
     }
 });
 
+function formatEmail(email) {
+    const cleaned = email.trim().toLowerCase();
+    const capitalized = cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
+    return capitalized;
+  }
+  
+
 router.get('/', (req, res) => {
     res.render('pages/signup'); 
 });
@@ -34,15 +41,22 @@ router.post('/', validateSignup ,async (req, res) => {
     try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array().map(error => error.msg) });
+            return res.render('pages/error', {
+                message: 'Input validate credentials',
+                error: errors.array()
+              });
         }
         
-        const { name, email, password, role } = req.body;
+        let { name, email, password, role } = req.body;
+        email = formatEmail(email)
         
         const existingUser = await User.findOne({ email });
         if (existingUser) {
             if (existingUser.isVerified) {
-                return res.status(400).json({ msg: 'Email already exists' });
+                return res.render('pages/error', {
+                    message: 'Email alredy Exist',
+                    error: null
+                  });
             }
             else {
                 await User.findOneAndDelete({ email })
