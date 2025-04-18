@@ -13,10 +13,9 @@ const jwt = require('jsonwebtoken');
 const Tag = require('../../model/Tag');
 const Product = require('../../model/Product');
 const Shop = require('../../model/Shop');
-const { createCanvas, loadImage, registerFont } = require('canvas');
 
-// Register font
-registerFont(path.join(__dirname, '../fonts/OpenSans-Regular.ttf'), {
+// ✅ Register custom font (must be done before any canvas operations)
+registerFont(path.join(__dirname, '../../fonts/OpenSans-Regular.ttf'), {
   family: 'OpenSans',
 });
 
@@ -50,15 +49,20 @@ async function generateTagImage(dataObj, tagDir) {
   const canvas = createCanvas(width, height);
   const ctx = canvas.getContext('2d');
 
+  // Background
   ctx.fillStyle = 'white';
   ctx.fillRect(0, 0, width, height);
 
+  // Load images
   const [qrImg, barcodeImg] = await Promise.all([
     loadImage(dataObj.qrCode),
     loadImage(dataObj.barcode),
   ]);
 
+  // Draw QR
   ctx.drawImage(qrImg, 20, 20, 120, 120);
+
+  // Text
   ctx.fillStyle = 'black';
   ctx.font = 'bold 18px OpenSans';
   ctx.fillText(`Shop : ${dataObj.shopName}`, 160, 30);
@@ -66,6 +70,8 @@ async function generateTagImage(dataObj, tagDir) {
   ctx.fillText(`ID : ${dataObj.id}`, 160, 90);
   ctx.fillText(`Code : ${dataObj.code}`, 160, 120);
   ctx.fillText(`Price : ₹${dataObj.price}`, 20, 170);
+
+  // Draw barcode
   ctx.drawImage(barcodeImg, 180, 160, 360, 60);
 
   const tagPath = path.join(tagDir, `${dataObj.id}.png`);
@@ -83,6 +89,7 @@ async function generateTagImage(dataObj, tagDir) {
   });
 }
 
+// Tag generator form page
 router.get('/', async (req, res) => {
   try {
     const token = req.cookies.token;
@@ -107,6 +114,7 @@ router.get('/', async (req, res) => {
   }
 });
 
+// Tag generator handler
 router.post('/generate', validateTag, async (req, res) => {
   try {
     const errors = validationResult(req);
@@ -143,9 +151,11 @@ router.post('/generate', validateTag, async (req, res) => {
       const savedTag = await tag.save();
       const tagId = savedTag._id.toString();
 
+      // Generate QR code
       const qrFile = path.join(qrPath, `${tagId}.png`);
       await QRCode.toFile(qrFile, tagId);
 
+      // Generate Barcode
       const barcodeFile = path.join(barcodePath, `${tagId}.png`);
       const barcodeBuffer = await bwipjs.toBuffer({
         bcid: 'code128',
@@ -157,11 +167,13 @@ router.post('/generate', validateTag, async (req, res) => {
       });
       fs.writeFileSync(barcodeFile, barcodeBuffer);
 
+      // Generate Image Tag
       const details = await fetchDetails(productId, shopId, tagId, qrFile, barcodeFile);
       const tagPath = await generateTagImage(details, tagDir);
       tagImagePaths.push(tagPath);
     }
 
+    // Create PDF from images
     const pdfDoc = await PDFDocument.create();
 
     for (const tagImagePath of tagImagePaths) {
