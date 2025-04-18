@@ -68,7 +68,6 @@ router.post("/", validateBill, async (req, res) => {
       { new: true, upsert: true }
     );
   
-    // Optional reset after 999
     if (counter.value >= 1000) {
       counter.value = 0;
       await counter.save();
@@ -76,6 +75,7 @@ router.post("/", validateBill, async (req, res) => {
   
     return counter.value;
   };
+  
   // Increment and reset logic
   const billno = await getNextCount(String(totalReceivingAmount));
 
