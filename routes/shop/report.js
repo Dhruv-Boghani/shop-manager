@@ -33,13 +33,12 @@ router.get('/', async (req, res) => {
 
         if (!productMap[key]) {
           productMap[key] = {
-            name: product?.name && product?.sku ? `${product.name} (${product.sku})` :
-              product?.name ? product.name :
-                product?.sku ? product.sku :
-                  "Unnamed",
+            name: product.name || "Unnamed",
+            sku: product.sku || "no SKU",
             buyPrice: product.buyPrice || 0,
             quantity: 1,
           };
+          
         } else {
           productMap[key].quantity += 1;
         }

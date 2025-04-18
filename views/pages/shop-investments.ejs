@@ -33,7 +33,7 @@
               <% shop.table.forEach(row => { %>
                 <tr>
                   <td><%= row.index %></td>
-                  <td><%= row.name %></td>
+                  <td><%= row.name %> (<%= row.sku %>)</td>
                   <td>₹<%= row.buyPrice %></td>
                   <td><%= row.quantity %></td>
                   <td>₹<%= row.investment %></td>
