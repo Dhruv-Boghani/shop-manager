@@ -1,90 +1,76 @@
-/* Reset some defaults */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
 body {
+  margin: 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f5f7fa;
-  /* padding: 20px; */
-}
-
-.container {
-  max-width: 600px;
-  margin: 60px auto;
-  background-color: #ffffff;
-  padding: 30px;
-  border-radius: 16px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-}
-
-h1 {
-  text-align: center;
-  color: #0d6efd;
-  margin-bottom: 30px;
-  font-size: 1.8rem;
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-label {
-  font-size: 1rem;
-  font-weight: 500;
+  background-color: #f2f4f8;
   color: #333;
 }
 
-input,
-textarea {
-  padding: 12px;
+.shop-container {
+  max-width: 600px;
+  margin: 60px auto;
+  padding: 0 16px;
+}
+
+.shop-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.shop-title {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 1.6rem;
+  color: #222;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccd0d5;
+  border-radius: 6px;
   font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  resize: vertical;
+  box-sizing: border-box;
 }
 
-textarea {
-  min-height: 100px;
-}
-
-button {
-  padding: 12px;
-  background-color: #0d6efd;
+.submit-btn {
+  background-color: #007bff;
   color: white;
-  font-size: 1rem;
-  font-weight: 600;
+  padding: 12px;
   border: none;
-  border-radius: 8px;
+  width: 100%;
+  font-size: 1rem;
+  border-radius: 6px;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: background 0.3s ease;
 }
 
-button:hover {
-  background-color: #0b5ed7;
+.submit-btn:hover {
+  background-color: #0056b3;
 }
 
-@media (max-width: 576px) {
-  .container {
-    padding: 20px;
-    margin: 30px 15px;
-  }
+.alert-danger {
+  background-color: #ffe5e5;
+  color: #b30000;
+  padding: 10px 16px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+}
 
-  h1 {
-    font-size: 1.5rem;
-  }
-
-  input,
-  textarea {
-    font-size: 0.95rem;
-  }
-
-  button {
-    font-size: 0.95rem;
-    padding: 10px;
-  }
+.alert-danger ul {
+  padding-left: 20px;
+  margin: 0;
 }
