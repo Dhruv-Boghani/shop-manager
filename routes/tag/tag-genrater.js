@@ -6,13 +6,19 @@ const QRCode = require('qrcode');
 const bwipjs = require('bwip-js');
 const fs = require('fs');
 const path = require('path');
-const { createCanvas, loadImage } = require('canvas');
+const { createCanvas, loadImage, registerFont } = require('canvas');
 const { PDFDocument } = require('pdf-lib');
 const jwt = require('jsonwebtoken');
 
 const Tag = require('../../model/Tag');
 const Product = require('../../model/Product');
 const Shop = require('../../model/Shop');
+const { createCanvas, loadImage, registerFont } = require('canvas');
+
+// Register font
+registerFont(path.join(__dirname, '../../fonts/OpenSans-Regular.ttf'), {
+  family: 'OpenSans',
+});
 
 mongoose.set('strictPopulate', false);
 
