@@ -1,7 +1,5 @@
-const { createCanvas, loadImage } = require("canvas");
-const path = require("path");
-const fs = require("fs");
-const Bill = require("../model/Bill"); // Adjust as needed
+const { createCanvas } = require("canvas");
+const Bill = require("../model/Bill");
 const Shop = require("../model/Shop");
 const Product = require("../model/Product");
 
@@ -15,14 +13,15 @@ async function generateBillCanvas(billId) {
   const canvas = createCanvas(600, 800, 'pdf');
   const ctx = canvas.getContext("2d");
 
-  // Basic styles
+  // Fill background
   ctx.fillStyle = "#fff";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+  // Header
   ctx.fillStyle = "#000";
   ctx.font = "bold 24px Arial";
   ctx.textAlign = "center";
-  ctx.fillText(shop.name.toUpperCase(), canvas.width / 2, 50); // center shop name
+  ctx.fillText(shop.name.toUpperCase(), canvas.width / 2, 50);
 
   ctx.font = "16px Arial";
   ctx.textAlign = "left";
@@ -44,10 +43,10 @@ async function generateBillCanvas(billId) {
   ctx.fillText("Amt", 400, y);
   y += 25;
 
+  // Table rows
   ctx.font = "14px Arial";
   for (const p of bill.products) {
     const product = await Product.findById(p.productId);
-
     const name = product?.name || "Item";
     const qty = p.quantity || 1;
     const rate = p.rate || 0;
@@ -60,8 +59,8 @@ async function generateBillCanvas(billId) {
     y += 25;
   }
 
+  // Totals
   y += 20;
-  ctx.fillStyle = "#000";
   ctx.font = "bold 16px Arial";
   ctx.fillText(`Total Amount: ₹${bill.totalAmount}`, 40, y);
   y += 25;
@@ -69,16 +68,9 @@ async function generateBillCanvas(billId) {
   y += 25;
   ctx.fillText(`Discount: ₹${bill.totalAmount - bill.totalReceiveAmount}`, 40, y);
 
-  // Save as PDF
-  const billsFolder = path.join(__dirname, "..", "public", "bills");
-  if (!fs.existsSync(billsFolder)) fs.mkdirSync(billsFolder, { recursive: true });
-
-  const pdfPath = path.join(billsFolder, `bill-${billId}.pdf`);
-
+  // Return PDF buffer directly
   const buffer = canvas.toBuffer("application/pdf");
-  fs.writeFileSync(pdfPath, buffer);
-
-  return pdfPath;
+  return buffer;
 }
 
 module.exports = generateBillCanvas;

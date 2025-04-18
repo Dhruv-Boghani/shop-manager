@@ -18,28 +18,21 @@ router.get('/download', async (req, res) => {
   console.log("🔍 Bill ID received:", billId);
 
   try {
-    const pdfPath = await generateBillCanvas(billId);
+    const pdfBuffer = await generateBillCanvas(billId);
 
-    res.download(pdfPath, (err) => {
-      if (err) {
-        console.error("❌ Error during download:", err.message);
-        res.status(500).send("Download failed");
-      } else {
-        // ✅ Delete the file after successful download
-        fs.unlink(pdfPath, (err) => {
-          if (err) {
-            console.error("⚠️ Error deleting file:", err.message);
-          } else {
-            console.log("🗑️ PDF deleted after download:", pdfPath);
-          }
-        });
-      }
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': `attachment; filename="bill-${billId}.pdf"`,
+      'Content-Length': pdfBuffer.length,
     });
+
+    res.send(pdfBuffer); // Send buffer instead of file
   } catch (err) {
     console.error("❌ Failed to generate PDF:", err.message);
     res.status(500).send("Failed to generate PDF");
   }
 });
+
 
 // routes/bill/abill.js
 
