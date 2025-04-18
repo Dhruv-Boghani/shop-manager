@@ -50,7 +50,7 @@ router.get('/', async (req, res) => {
       let index = 1;
 
       for (const key in productMap) {
-        const { name, buyPrice, quantity } = productMap[key];
+        const { name, buyPrice, quantity, sku } = productMap[key];
         const investment = buyPrice * quantity;
 
         table.push({
