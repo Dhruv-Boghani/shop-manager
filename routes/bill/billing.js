@@ -6,7 +6,6 @@ const Shop = require("../../model/Shop");
 const Counter = require("../../model/Counter")
 const { body, validationResult } = require("express-validator");
 // const billingController = require("../../controler/create-bill");
-const Counter = require("../../model/Counter");
 const jwt = require("jsonwebtoken");
 
 const router = express.Router();
