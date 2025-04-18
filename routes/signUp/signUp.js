@@ -58,7 +58,7 @@ router.post('/', validateSignup ,async (req, res) => {
         if (role === 'admin') {
             return res.render('pages/error', {
                 message: 'It is not a error "your admin requst is created succusfully wait for aprove"',
-                error: err.message
+                error: ''
               });
         }
 
