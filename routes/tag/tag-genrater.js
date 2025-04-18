@@ -121,9 +121,9 @@ router.post('/generate', validateTag, async (req, res) => {
     const productId = new mongoose.Types.ObjectId(product);
     const shopId = new mongoose.Types.ObjectId(shop);
 
-    const qrPath = path.join(__dirname, '../../public/qrcodes');
-    const barcodePath = path.join(__dirname, '../../public/barcodes');
-    const tagDir = path.join(__dirname, '../../public/tags');
+    const qrPath = path.join('/tmp', 'qrcodes');
+    const barcodePath = path.join('/tmp', 'barcodes');
+    const tagDir = path.join('/tmp', 'tags');
 
     [qrPath, barcodePath, tagDir].forEach((p) => {
       if (!fs.existsSync(p)) fs.mkdirSync(p, { recursive: true });
