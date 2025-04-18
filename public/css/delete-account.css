@@ -1,0 +1,115 @@
+/* delete-account.css */
+
+/* General Body Styling */
+.custom-body {
+  background-color: #f8f9fa;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* Container Centering */
+.custom-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  box-sizing: border-box; 
+}
+
+/* Card Styling */
+.custom-card {
+  background-color: #fff;
+  padding: 30px;
+  width: 100%;
+  max-width: 500px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Heading Style */
+.custom-heading {
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 24px;
+  color: #333;
+}
+
+/* Input Group */
+.input-group {
+  margin-bottom: 20px;
+
+}
+
+.input-label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: bold;
+  color: #444;
+}
+
+.input-field {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  transition: border-color 0.3s;
+  box-sizing: border-box; 
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+/* Button */
+.submit-btn {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.submit-btn:hover {
+  background-color: #c82333;
+}
+
+/* Alert Messages */
+.alert {
+  padding: 10px 15px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.alert-success {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.alert-danger {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+/* Back Link */
+.back-link {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.back-link-text {
+  text-decoration: none;
+  color: #007bff;
+  transition: color 0.3s;
+}
+
+.back-link-text:hover {
+  color: #0056b3;
+}

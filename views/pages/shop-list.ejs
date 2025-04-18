@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All Shops - MyShop</title>
+  <link rel="stylesheet" href="/css/shop-list.css">
+  <link rel="stylesheet" href="/css/navbar.css">
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+
+  <div class="main-container">
+    <h2>All Shops</h2>
+
+    <div class="table-wrapper">
+      <table class="custom-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Shop Name</th>
+            <th>Address</th>
+            <th>Manager</th>
+            <th>Product IDs</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% shops.forEach((shop, index) => { %>
+            <tr>
+              <td><%= index + 1 %></td>
+              <td><%= shop.name %></td>
+              <td><%= shop.address %></td>
+              <td><%= shop.manager || "Not Assigned" %></td>
+              <td>
+                <ul class="sku-list">
+                  <% shop.product.forEach(prod => { %>
+                    <li><%= prod.productSKU %></li>
+                  <% }) %>
+                </ul>
+              </td>
+              <td class="action-buttons">
+                <a href="/shop/edit/<%= shop._id %>" class="btn warning">Edit</a>
+                <form action="/shop/delete/<%= shop._id %>" method="POST" onsubmit="return confirm('Are you sure you want to delete this shop?');">
+                  <button type="submit" class="btn danger">Delete</button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+
+    <a href="/shop/add" class="btn primary add-btn">Add Shop</a>
+  </div>
+</body>
+</html>

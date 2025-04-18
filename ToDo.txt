@@ -1,0 +1,20 @@
+    sign up set up for check role
+    add shop id in token
+    bill page routes (first check)
+    add jwt in OTP and bill page
+    logout 
+    chang shop in bill
+    login bug ckeck for isverified
+check all routes (user is necessary) (at end)
+calculation faunction (use old code and ER diagram )
+try to make data routes
+
+
+    edit routes (now not need)
+apply restriction using user role (now not need)
+
+
+#deploye time
+mongoDB cluster command run
+fix file for vercel using chat GPT
+set .env

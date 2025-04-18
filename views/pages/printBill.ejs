@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Print Bill</title>
+  <link rel="stylesheet" href="/css/printBill.css"> <!-- Link to custom CSS -->
+</head>
+
+<body onload="window.print()">
+  <div class="bill-container">
+    <h1 class="bill-title"><%= shop.shopName %> - Bill</h1>
+
+    <div class="bill-info">
+      <p><strong>Bill No:</strong> <%= bill.billNo %></p>
+      <p><strong>Customer:</strong> <%= bill.customerName %> | <strong>Phone:</strong> <%= bill.customerPhone %></p>
+    </div>
+
+    <table class="bill-table">
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Qty</th>
+          <th>Rate</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% bill.products.forEach(product => { %>
+          <tr>
+            <td><%= product.name || product.productId.name %></td>
+            <td><%= product.quantity %></td>
+            <td>₹<%= product.rate %></td>
+            <td>₹<%= product.quantity * product.rate %></td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+
+    <div class="bill-summary">
+      <h4>Total Amount: ₹<%= bill.totalAmount %></h4>
+      <h5>Paid: ₹<%= bill.totalReceiveAmount %></h5>
+    </div>
+
+    <div class="no-print bill-actions">
+      <button class="print-btn" onclick="window.print()">🖨️ Print Again</button>
+      <a href="/billing" class="action-btn">⬅️ Go to Billing</a>
+      <a href="/allbill" class="action-btn">⬅️ Go to All Bill</a>
+    </div>
+  </div>
+</body>
+
+</html>

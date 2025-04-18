@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sign Up | Shop Manager</title>
+  <link rel="stylesheet" href="/css/signup.css" />
+  <link rel="stylesheet" href="/css/navbar.css" />
+</head>
+<body>
+  <%- include("../partials/navbar") %>
+
+  <div class="signup-container">
+    <div class="signup-card">
+      <h2 class="signup-title">Sign Up</h2>
+
+      <form action="/signup" method="POST" class="signup-form">
+        <div class="signup-group">
+          <label for="name">Full Name</label>
+          <input type="text" id="name" name="name" required />
+        </div>
+
+        <div class="signup-group">
+          <label for="email">Email address</label>
+          <input type="email" id="email" name="email" required />
+        </div>
+
+        <div class="signup-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required />
+        </div>
+
+        <div class="signup-group">
+          <label for="role">Role</label>
+          <select name="role" id="role" required>
+            <option value="">-- Select Role --</option>
+            <option value="admin">Admin</option>
+            <option value="manager">Manager</option>
+            <option value="seller">Seller</option>
+            <option value="user">User</option>
+          </select>
+        </div>
+
+        <button type="submit" class="signup-button">Sign Up</button>
+      </form>
+
+      <div class="signup-footer">
+        <p>Already have an account?</p>
+        <a href="/login" class="login-link">Login</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,148 @@
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f4f4f4;
+    color: #333;
+    /* padding: 20px; */
+  }
+  
+  /* Main Container */
+  .main-container {
+    max-width: 1100px;
+    margin: auto;
+    background: white;
+    padding: 30px;
+    margin-top: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+  }
+  
+  /* Heading */
+  .main-container h2 {
+    text-align: center;
+    color: #0d6efd;
+    margin-bottom: 25px;
+  }
+  
+  /* Table Styling */
+  .table-wrapper {
+    overflow-x: auto;
+  }
+  
+  .custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 700px;
+  }
+  
+  .custom-table thead {
+    background: #222;
+    color: #fff;
+  }
+  
+  .custom-table th,
+  .custom-table td {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    vertical-align: top;
+  }
+  
+  .custom-table tbody tr:nth-child(even) {
+    background: #f9f9f9;
+  }
+  
+  .custom-table tbody tr:hover {
+    background-color: #eef7ff;
+  }
+  
+  /* SKU List */
+  .sku-list {
+    padding-left: 18px;
+    list-style: square;
+  }
+  
+  /* Buttons */
+  /* Buttons */
+.btn {
+    padding: 6px 12px;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 6px;
+    cursor: pointer;
+    display: inline-block;
+    white-space: nowrap;
+    border: none;
+    transition: background-color 0.2s ease-in-out;
+  }
+  
+  .btn.warning {
+    background-color: #ffc107;
+    color: #212529;
+  }
+  
+  .btn.warning:hover {
+    background-color: #e0a800;
+  }
+  
+  .btn.danger {
+    background-color: #dc3545;
+    color: #fff;
+  }
+  
+  .btn.danger:hover {
+    background-color: #bb2d3b;
+  }
+  
+  .action-buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Make sure form inside action buttons has no margin */
+  .action-buttons form {
+    margin: 0;
+  }
+  
+  .btn.primary {
+    background-color: #0d6efd;
+    color: #fff;
+  }
+  
+  .btn.primary:hover {
+    background-color: #0b5ed7;
+  }
+  
+  .add-btn {
+    margin-top: 20px;
+    display: inline-block;
+  }
+  
+  /* Action Buttons */
+  .action-buttons {
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .custom-table {
+      font-size: 14px;
+    }
+  
+    .action-buttons {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+  }
+  

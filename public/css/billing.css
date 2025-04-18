@@ -1,0 +1,155 @@
+/* Custom styling for Billing page */
+
+/* Global Styles */
+body {
+  background-color: #f8f9fa;
+  font-family: Arial, sans-serif;
+}
+
+.card {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.form-control {
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 14px;
+}
+
+button {
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.alert {
+  font-size: 16px;
+  border-radius: 8px;
+}
+
+.alert-success {
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+}
+
+.alert-danger {
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+}
+
+.text-center a {
+  color: #007bff;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.text-center a:hover {
+  text-decoration: underline;
+}
+
+/* Reader Area (QR/Barcode Scanner) */
+#reader {
+  max-width: 100%;
+  border: 1px solid #dee2e6;
+  border-radius: 0.5rem;
+  padding: 10px;
+  background-color: #f8f9fa;
+  width: 50%; /* Adjust width of the camera view */
+  /* height: 275px; Reduce height of the camera view */
+  margin: 0 auto; /* Center the camera view horizontally */
+  display: block; /* Ensure the reader is displayed as a block element */
+}
+
+#reader video {
+  /* border-radius: 0.5rem; */
+  height: 100% !important;  /* Force video height to be 100% of the container */
+  width: 100% !important;   /* Force video width to be 100% of the container */
+}
+
+.form-section {
+  background-color: #f1f1f1;
+  border-radius: 0.5rem;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.btn-group-custom {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+#jsonOutput {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+/* Large screens (Desktop and Laptop) */
+@media (min-width: 992px) {
+  .card {
+    padding: 40px;
+  }
+
+  .form-control {
+    font-size: 16px;
+  }
+
+  button {
+    font-size: 18px;
+  }
+
+  #reader {
+    height: 450px; /* Larger scanner on desktop */
+  }
+}
+
+/* Medium screens (Tablet) */
+@media (max-width: 991px) and (min-width: 768px) {
+  .card {
+    padding: 30px;
+  }
+
+  .form-control {
+    font-size: 15px;
+  }
+
+  button {
+    font-size: 17px;
+  }
+
+  #reader {
+    height: 400px; /* Adjusted scanner size for tablets */
+  }
+}
+
+/* Small screens (Mobile) */
+@media (max-width: 767px) {
+  body {
+    padding: 10px;
+  }
+
+  .card {
+    padding: 20px;
+    box-shadow: none;
+    border-radius: 5px;
+  }
+
+  .form-control {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  button {
+    font-size: 16px;
+  }
+
+  .text-center a {
+    font-size: 12px;
+  }
+
+  #reader {
+    height: 250px; /* Smaller scanner for mobile */
+  }
+}

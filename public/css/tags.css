@@ -1,0 +1,134 @@
+/* Base Styles (Desktop default) */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .tag-container {
+    max-width: 1000px;
+    margin: 50px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-sizing: border-box;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .page-title {
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 28px;
+    color: #333;
+  }
+  
+  .search-box {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    margin-bottom: 20px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+  }
+  
+  .table-wrapper {
+    overflow-x: auto;
+  }
+  
+  .tag-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 700px;
+  }
+  
+  .tag-table th,
+  .tag-table td {
+    padding: 14px 10px;
+    text-align: left;
+    border-bottom: 1px solid #ccc;
+    font-size: 16px;
+  }
+  
+  .tag-table thead {
+    background-color: #333;
+    color: white;
+  }
+  
+  .delete-btn {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .delete-btn:hover {
+    background-color: #c0392b;
+  }
+  
+  .no-tags {
+    text-align: center;
+    color: #777;
+    font-style: italic;
+  }
+  
+  /* Tablet */
+  @media screen and (max-width: 768px) {
+    .tag-container {
+      margin: 30px 20px;
+      padding: 20px;
+    }
+  
+    .page-title {
+      font-size: 24px;
+    }
+  
+    .tag-table th,
+    .tag-table td {
+      font-size: 14px;
+      padding: 10px 8px;
+    }
+  
+    .search-box {
+      padding: 10px;
+      font-size: 15px;
+    }
+  
+    .delete-btn {
+      padding: 5px 10px;
+      font-size: 13px;
+    }
+  }
+  
+  /* Mobile */
+  @media screen and (max-width: 480px) {
+    .tag-container {
+      margin: 20px 0px;
+      padding: 15px;
+    }
+  
+    .page-title {
+      font-size: 20px;
+    }
+  
+    .search-box {
+      font-size: 14px;
+      padding: 8px;
+    }
+  
+    .tag-table th,
+    .tag-table td {
+      font-size: 13px;
+      padding: 8px 6px;
+    }
+  
+    .delete-btn {
+      font-size: 13px;
+      padding: 5px 10px;
+    }
+  }
+  

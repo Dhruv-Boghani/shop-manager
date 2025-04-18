@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tag Generator | MyShop</title>
+  <link href="/css/tag-generator.css" rel="stylesheet">
+  <link href="/css/navbar.css" rel="stylesheet">
+</head>
+<body>
+    
+<%- include('../partials/navbar') %>
+
+<div class="container mt-5">
+  <div class="card shadow">
+    <div class="card-body">
+      <h4 class="card-title mb-4 text-center">Generate Product Tags</h4>
+
+      <% if (typeof errors !== 'undefined' && errors.length > 0) { %>
+        <div class="alert alert-danger">
+          <ul class="mb-0">
+            <% errors.forEach(error => { %>
+              <li><%= error.msg %></li>
+            <% }) %>
+          </ul>
+        </div>
+      <% } %>
+
+      <form method="POST" action="/tag/generate">
+        <div class="input-group mb-3">
+          <label for="product" class="form-label">Select Product</label>
+          <select class="form-select" name="product" id="product" required>
+            <% products.forEach(prod => { %>
+              <option value="<%= prod._id %>"><%= prod.name %></option>
+            <% }) %>
+          </select>
+        </div>
+
+        <div class="input-group mb-3">
+          <label for="shop" class="form-label">Select Shop</label>
+          <select class="form-select" name="shop" id="shop" required>
+            <% shops.forEach(shop => { %>
+              <option value="<%= shop._id %>"><%= shop.name %></option>
+            <% }) %>
+          </select>
+        </div>
+
+        <div class="input-group mb-3">
+          <label for="no" class="form-label">Number of Tags</label>
+          <input type="number" class="form-control" name="no" id="no" min="1" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary full-width">Generate & Download Tags</button>
+      </form>
+    </div>
+  </div>
+  <div class="d-flex justify-content-center mt-4">
+    <a href="/tags" class="btn btn-secondary">Tags</a>
+  </div>
+</div>
+
+</body>
+</html>

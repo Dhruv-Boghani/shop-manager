@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Home - MyShop</title>
+  <link href="/css/home.css" rel="stylesheet" />
+  <link href="/css/navbar.css" rel="stylesheet" />
+  <link href="/css/footer.css" rel="stylesheet" />
+  <style>
+    .install-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #0d6efd;
+      color: white;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      z-index: 9999;
+    }
+  </style>
+  
+</head>
+<body>
+
+  <%- include('../partials/navbar') %>
+
+  <main class="home-container">
+    <section class="intro-section">
+      <h1>Welcome to MyShop</h1>
+      <h3>Manage By kanishka Fashion</h3>
+      <p>Your smart solution for managing products, billing, tags, and reports — all in one place.</p>
+    </section>
+
+    <section class="navigation-section">
+      <h2>Navigate to a Section</h2>
+      <div class="btn-grid">
+        <a href="/bill" class="btn">Make Bill</a>
+        <a href="/tag" class="btn">Generate Tag</a>
+        <a href="/product" class="btn">Products</a>
+        <a href="/shop" class="btn">Shops</a>
+        <a href="/tags" class="btn">All Tags</a>
+        <a href="/allbill" class="btn">All Bills</a>
+        <a href="/report" class="btn">Shop Report</a>
+        <a href="/assign" class="btn">Assign Manager</a>
+        <button id="installAppBtn" style="display: none;" class="install-btn">Install App</button>
+      </div>
+    </section>
+  </main>
+  <%- //include('../partials/footer') %>
+
+
+  <script>
+    let deferredPrompt;
+    const installBtn = document.getElementById('installAppBtn');
+  
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      installBtn.style.display = 'block';
+  
+      installBtn.addEventListener('click', () => {
+        installBtn.style.display = 'none';
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === 'accepted') {
+            console.log('User accepted the A2HS prompt');
+          } else {
+            console.log('User dismissed the A2HS prompt');
+          }
+          deferredPrompt = null;
+        });
+      });
+    });
+  </script>
+  
+</body>
+</html>

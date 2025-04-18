@@ -1,0 +1,90 @@
+/* Reset some defaults */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f5f7fa;
+  /* padding: 20px; */
+}
+
+.container {
+  max-width: 600px;
+  margin: 60px auto;
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  text-align: center;
+  color: #0d6efd;
+  margin-bottom: 30px;
+  font-size: 1.8rem;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+label {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #333;
+}
+
+input,
+textarea {
+  padding: 12px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  resize: vertical;
+}
+
+textarea {
+  min-height: 100px;
+}
+
+button {
+  padding: 12px;
+  background-color: #0d6efd;
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+button:hover {
+  background-color: #0b5ed7;
+}
+
+@media (max-width: 576px) {
+  .container {
+    padding: 20px;
+    margin: 30px 15px;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  input,
+  textarea {
+    font-size: 0.95rem;
+  }
+
+  button {
+    font-size: 0.95rem;
+    padding: 10px;
+  }
+}

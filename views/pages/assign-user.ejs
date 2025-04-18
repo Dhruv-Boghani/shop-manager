@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Assign User</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/navbar.css">
+  <link rel="stylesheet" href="/css/assign-user.css">
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+
+  <div class="container">
+    <h2 class="page-title">Assign to Shop: <%= shop.name %></h2>
+
+    <% if (shop.manager) { %>
+      <p class="current-info"><strong>Current:</strong> <%= shop.manager.name %> (<%= shop.manager.role %>)</p>
+      <form action="/assign/unassign/<%= shop._id %>" method="POST" class="form-space">
+        <button class="btn danger">Remove Assignment</button>
+      </form>
+    <% } else { %>
+      <p class="no-assignment">No one assigned yet.</p>
+    <% } %>
+
+    <form action="/assign/<%= shop._id %>" method="POST" class="assign-form">
+      <label for="userId">Select User</label>
+      <select name="userId" id="userId" required>
+        <option disabled selected>-- Choose User --</option>
+        <% users.forEach(user => { %>
+          <option value="<%= user._id %>" <%= shop.manager && shop.manager._id.toString() === user._id.toString() ? 'selected' : '' %>>
+            <%= user.name %> (<%= user.role %>)
+          </option>
+        <% }) %>
+      </select>
+      
+      <div class="btn-group">
+        <button type="submit" class="btn success">Assign</button>
+        <a href="/assign" class="btn secondary">Back</a>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

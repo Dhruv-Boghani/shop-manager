@@ -1,0 +1,83 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* Body Styling */
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f7f9fc;
+    color: #333;
+  }
+  
+  /* Container */
+  .select-container {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 20px;
+  }
+  
+  /* Heading */
+  .select-heading {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 25px;
+    text-align: center;
+    color: #222;
+  }
+  
+  /* Card */
+  .shop-card {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
+  }
+  
+  .shop-card-body {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Input Group */
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  /* Label */
+  .input-label {
+    font-size: 16px;
+    font-weight: 500;
+  }
+  
+  /* Select */
+  .shop-select {
+    padding: 12px;
+    font-size: 15px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background-color: #fafafa;
+    transition: border-color 0.3s ease;
+  }
+  
+  .shop-select:focus {
+    border-color: #007bff;
+    outline: none;
+    background-color: #fff;
+  }
+  
+  /* Responsive */
+  @media screen and (max-width: 600px) {
+    .select-container {
+      padding: 15px;
+    }
+  
+    .select-heading {
+      font-size: 20px;
+    }
+  }
+  

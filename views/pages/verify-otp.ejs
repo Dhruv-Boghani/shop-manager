@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Verify OTP</title>
+  <link href="/css/verify-otp.css" rel="stylesheet" />
+  <link href="/css/navbar.css" rel="stylesheet" />
+</head>
+<body>
+
+  <%- include('../partials/navbar') %>
+
+  <div class="otp-container">
+    <h2 class="page-title">Enter OTP</h2>
+
+    <% if (typeof error !== 'undefined' && error) { %>
+      <div class="alert-box"><%= error %></div>
+    <% } %>
+
+    <form method="POST" action="/bill/verify-otp" class="otp-form">
+      <div class="form-group">
+        <label for="otp">One-Time Password</label>
+        <input type="text" name="otp" id="otp" required placeholder="Enter 6-digit OTP" />
+      </div>
+
+      <div class="button-group">
+        <button type="submit" name="redirect" value="/bill" class="btn green">Go to Billing</button>
+        <button type="submit" name="redirect" value="/tags" class="btn blue">Go to Tags</button>
+      </div>
+    </form>
+  </div>
+
+</body>
+</html>

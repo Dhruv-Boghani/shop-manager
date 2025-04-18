@@ -1,0 +1,117 @@
+/* Reset some browser styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f5f6fa;
+    /* padding: 20px; */
+    color: #333;
+  }
+  
+  .custom-container {
+    max-width: 500px;
+    margin: auto;
+    background-color: #fff;
+    padding: 25px;
+    margin-top: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.08);
+  }
+  
+  .page-title {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 25px;
+    color: #222;
+  }
+  
+  .edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .form-label {
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+  
+  .form-input {
+    padding: 10px 12px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    width: 100%;
+  }
+  
+  .choices__inner {
+    min-height: 44px;
+    border-radius: 6px;
+    box-sizing: border-box;
+  }
+  
+  .form-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  
+  .btn {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.2s;
+    text-decoration: none;
+    text-align: center;
+  }
+  
+  .btn-primary {
+    background-color: #4CAF50;
+    color: #fff;
+  }
+  
+  .btn-primary:hover {
+    background-color: #45a049;
+  }
+  
+  .btn-secondary {
+    background-color: #e0e0e0;
+    color: #333;
+  }
+  
+  .btn-secondary:hover {
+    background-color: #d5d5d5;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .custom-container {
+      padding: 15px;
+    }
+  
+    .custom-heading {
+      font-size: 24px;
+    }
+  
+    .input-field {
+      font-size: 14px;
+    }
+  
+    .submit-btn,
+    .cancel-btn {
+      font-size: 14px;
+    }
+  }
+  
+  

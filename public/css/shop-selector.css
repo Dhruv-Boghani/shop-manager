@@ -1,0 +1,87 @@
+/* Reset */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  .custom-body {
+    background-color: #f4f4f4;
+    /* padding: 20px; */
+  }
+  
+  /* Container */
+  .shop-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    /* margin-top: 30px; */
+  }
+  
+  /* Card */
+  .shop-card {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 400px;
+  }
+  
+  /* Title */
+  .shop-title {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #333;
+    font-size: 1.8rem;
+  }
+  
+  /* Form */
+  .shop-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  /* Select */
+  .shop-select {
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+  }
+  
+  /* Button */
+  .shop-button {
+    padding: 12px;
+    font-size: 1rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .shop-button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Responsive */
+  @media (max-width: 500px) {
+    .shop-card {
+      padding: 20px;
+    }
+  
+    .shop-title {
+      font-size: 1.5rem;
+    }
+  
+    .shop-button,
+    .shop-select {
+      font-size: 0.95rem;
+    }
+  }
+  

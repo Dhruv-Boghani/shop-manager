@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Select Shop</title>
+  <link rel="stylesheet" href="/css/select-shop.css">
+  <link rel="stylesheet" href="/css/navbar.css">
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+
+  <div class="select-container">
+    <h3 class="select-heading">Select a Shop to Assign Manager</h3>
+
+    <div class="shop-card">
+      <div class="shop-card-body">
+        <form method="GET">
+          <div class="input-group">
+            <label for="shopSelect" class="input-label">Choose a Shop:</label>
+            <select class="shop-select" id="shopSelect" onchange="if(this.value) window.location.href = this.value">
+              <option selected disabled>-- Select a shop --</option>
+              <% shops.forEach(shop => { %>
+                <option value="/assign/<%= shop._id %>">
+                  <%= shop.name %>
+                  <% if (shop.manager) { %> - Managed by <%= shop.manager.name %> <% } else { %> - No Manager <% } %>
+                </option>
+              <% }) %>
+            </select>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,100 @@
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* Body */
+  body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+    /* padding: 20px; */
+  }
+  
+  /* Container */
+  .shop-container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+  }
+  
+  /* Each Shop Block */
+  .shop-block {
+    margin-bottom: 50px;
+    background: #fff;
+    padding: 20px 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  }
+  
+  /* Heading */
+  .shop-heading {
+    font-size: 22px;
+    margin-bottom: 20px;
+    color: #0d6efd;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  
+  .total-investment {
+    font-size: 14px;
+    color: #555;
+    font-weight: 500;
+  }
+  
+  /* Table Wrapper */
+  .table-wrapper {
+    overflow-x: auto;
+  }
+  
+  /* Table Styles */
+  .custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+  }
+  
+  .custom-table thead {
+    background-color: #222;
+    color: white;
+  }
+  
+  .custom-table th, .custom-table td {
+    border: 1px solid #ddd;
+    padding: 10px 14px;
+    text-align: left;
+  }
+  
+  .custom-table tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+  
+  .custom-table tbody tr:hover {
+    background-color: #e6f0ff;
+  }
+  
+  /* Responsive */
+  @media screen and (max-width: 768px) {
+    .shop-heading {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 5px;
+    }
+    
+    .shop-container{
+        padding: 0px;
+        padding-top: 25px;
+    }
+
+    .custom-table {
+      font-size: 14px;
+    }
+  
+    .shop-block {
+      padding: 15px;
+    }
+  }
+  

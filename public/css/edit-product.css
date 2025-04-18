@@ -1,0 +1,117 @@
+/* General Styles */
+.custom-body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f9;
+  margin: 0;
+  padding: 0;
+}
+
+.custom-container {
+  width: 100%;
+  max-width: 600px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+.custom-heading {
+  text-align: center;
+  font-size: 28px;
+  color: #333;
+  margin-bottom: 30px;
+}
+
+/* Input Group Styles */
+.input-group {
+  margin-bottom: 20px;
+}
+
+.input-label {
+  display: block;
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.input-field {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  transition: border-color 0.3s ease;
+  box-sizing: border-box;
+}
+
+.input-field:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+/* Textarea Styles */
+.textarea {
+  resize: vertical;
+}
+
+/* Button Group Styles */
+.btn-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.submit-btn,
+.cancel-btn {
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 4px;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.submit-btn {
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+}
+
+.submit-btn:hover {
+  background-color: #218838;
+}
+
+.cancel-btn {
+  background-color: #dc3545;
+  color: #fff;
+  text-align: center;
+  border: none;
+  width: 100px;
+  text-align: center;
+}
+
+.cancel-btn:hover {
+  background-color: #c82333;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .custom-container {
+    padding: 15px;
+  }
+
+  .custom-heading {
+    font-size: 24px;
+  }
+
+  .input-field {
+    font-size: 14px;
+  }
+
+  .submit-btn,
+  .cancel-btn {
+    font-size: 14px;
+  }
+}

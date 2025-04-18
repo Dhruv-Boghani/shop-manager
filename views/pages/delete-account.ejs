@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Delete Account</title>
+
+  <!-- Link to Custom CSS -->
+  <link rel="stylesheet" href="/css/delete-account.css">
+</head>
+<body class="custom-body">
+
+  <div class="custom-container">
+    <div class="custom-card">
+      <h2 class="custom-heading">Update Your Profile</h2>
+
+      <% if (typeof success !== 'undefined') { %>
+        <div class="alert alert-success">
+          <%= success %>
+        </div>
+      <% } %>
+
+      <% if (typeof error !== 'undefined') { %>
+        <div class="alert alert-danger">
+          <%= error %>
+        </div>
+      <% } %>
+
+      <form action="/delete-account" method="POST">
+        <div class="input-group">
+          <label for="name" class="input-label">Full Name</label>
+          <input type="text" class="input-field" id="name" name="name" value="<%= user.name %>" required>
+        </div>
+
+        <div class="input-group">
+          <label for="email" class="input-label">Email address</label>
+          <input type="email" class="input-field" id="email" name="email" value="<%= user.email %>" required>
+        </div>
+
+        <div class="input-group">
+          <label for="password" class="input-label">Password</label>
+          <input type="password" class="input-field" id="password" name="password" minlength="8">
+        </div>
+
+        <button type="submit" class="submit-btn">Delete Account</button>
+      </form>
+
+      <div class="back-link">
+        <a href="/" class="back-link-text">← Go back to home</a>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

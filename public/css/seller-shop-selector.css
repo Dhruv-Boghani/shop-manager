@@ -1,0 +1,96 @@
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* Body */
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f6f8;
+    color: #333;
+    /* padding: 30px; */
+  }
+  
+  /* Container */
+  .seller-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 25px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
+  }
+  
+  /* Heading */
+  .seller-heading {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 25px;
+    text-align: center;
+    color: #222;
+  }
+  
+  /* Form */
+  .seller-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  /* Label */
+  .form-label {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 5px;
+  }
+  
+  /* Select */
+  .form-select {
+    padding: 10px 14px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #fafafa;
+    transition: all 0.3s ease;
+  }
+  
+  .form-select:focus {
+    outline: none;
+    border-color: #007bff;
+    background-color: #fff;
+  }
+  
+  /* Submit Button */
+  .submit-btn {
+    padding: 12px;
+    background-color: #007bff;
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .submit-btn:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Responsive */
+  @media screen and (max-width: 600px) {
+    .seller-container {
+      padding: 15px;
+      /* margin: 30px 10px; */
+    }
+  
+    .seller-heading {
+      font-size: 20px;
+    }
+  
+    .submit-btn {
+      font-size: 15px;
+    }
+  }
+  

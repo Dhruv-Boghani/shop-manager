@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Add Product - MyShop</title>
+  <link rel="stylesheet" href="/css/productForm.css">
+  <link rel="stylesheet" href="/css/navbar.css">
+</head>
+<body>
+  <%- include('../partials/navbar') %> <!-- Optional Navbar include -->
+
+  <div class="form-container">
+    <h2 class="form-heading">Add New Product</h2>
+
+    <% if (error && error.length > 0) { %>
+      <div class="alert-error">
+        <ul>
+          <% error.forEach(err => { %>
+            <li><%= err.msg %></li>
+          <% }) %>
+        </ul>
+      </div>
+    <% } %>
+
+    <form action="/product" method="POST" class="product-form">
+      <div class="input-group">
+        <label for="name" class="input-label">Product Name</label>
+        <input type="text" class="input-field" id="name" name="name" required>
+      </div>
+
+      <div class="input-group">
+        <label for="productSKU" class="input-label">Product SKU</label>
+        <input type="text" class="input-field" id="productSKU" name="productSKU" required>
+      </div>
+
+      <div class="input-group">
+        <label for="buyPrice" class="input-label">Buy Price</label>
+        <input type="number" class="input-field" id="buyPrice" name="buyPrice" required>
+      </div>
+
+      <div class="input-group">
+        <label for="salePrice" class="input-label">Sale Price</label>
+        <input type="number" class="input-field" id="salePrice" name="salePrice" required>
+      </div>
+
+      <div class="input-group">
+        <label for="description" class="input-label">Description (Optional)</label>
+        <textarea class="input-field" id="description" name="description" rows="3"></textarea>
+      </div>
+
+      <button type="submit" class="submit-btn">Add Product</button>
+    </form>
+  </div>
+</body>
+</html>

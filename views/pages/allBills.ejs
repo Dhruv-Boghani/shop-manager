@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>All Bills - MyShop</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- <link rel="stylesheet" href="/css/style.css"> -->
+  <link rel="stylesheet" href="/css/navbar.css">
+  <link rel="stylesheet" href="/css/allBills.css"> <!-- Page-specific CSS -->
+</head>
+
+<body>
+  <%- include('../partials/navbar') %>
+
+    <div class="container">
+      <h2 class="page-title">All Bills</h2>
+      <div class="table-responsive">
+        <table class="custom-table">
+          <thead>
+            <tr>
+              <th>Bill No</th>
+              <th>Customer Name</th>
+              <th>Phone No</th>
+              <th>Total Amount</th>
+              <th>Total Received</th>
+              <th>Action</th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% bills.forEach(bill=> { %>
+              <tr>
+                <td>
+                  <%= bill.billNo %>
+                </td>
+                <td>
+                  <%= bill.customerName %>
+                </td>
+                <td>
+                  <%= bill.customerPhone %>
+                </td>
+                <td>₹<%= bill.totalAmount %>
+                </td>
+                <td>₹<%= bill.totalReceiveAmount %>
+                </td>
+                <td>
+                  <a href="/billing/abill/print?id=<%= bill._id %>" class="btn primary">Print</a>
+                  <a href="/allbill/edit/<%= bill._id %>" class="btn warning">Edit</a>
+                </td>
+                <td>
+                  <form action="/allbill/delete/<%= bill._id %>" method="POST"
+                    onsubmit="return confirm('Are you sure?')">
+                    <button class="btn danger" type="submit">Delete</button>
+                  </form>
+                </td>
+              </tr>
+              <% }); %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+</body>
+
+</html>

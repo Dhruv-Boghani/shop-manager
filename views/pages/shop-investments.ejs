@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shop Inventory</title>
+  <link rel="stylesheet" href="/css/shop-investments.css" />
+  <link rel="stylesheet" href="/css/navbar.css" />
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+
+  <div class="shop-container">
+    <% shopTables.forEach(shop => { %>
+      <div class="shop-block">
+        <h3 class="shop-heading">
+          <%= shop.shopName %>
+          <span class="total-investment">(Total Investment: ₹<%= shop.totalInvestment %>)</span>
+        </h3>
+
+        <div class="table-wrapper">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Product Name (SKU)</th>
+                <th>Buy Price</th>
+                <th>Quantity</th>
+                <th>Investment</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% shop.table.forEach(row => { %>
+                <tr>
+                  <td><%= row.index %></td>
+                  <td><%= row.name %></td>
+                  <td>₹<%= row.buyPrice %></td>
+                  <td><%= row.quantity %></td>
+                  <td>₹<%= row.investment %></td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+</body>
+</html>

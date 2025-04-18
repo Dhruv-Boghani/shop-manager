@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Ensure mobile responsiveness -->
+  <title>Verify OTP - Shop Manager</title>
+  <link rel="stylesheet" href="/css/otp.css"> <!-- Link to custom CSS -->
+  <link rel="stylesheet" href="/css/navbar.css"> <!-- Link to custom CSS -->
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+
+  <div class="otp-container">
+    <div class="otp-card">
+      <h4 class="otp-title">Verify OTP</h4>
+
+      <% if (typeof error !== 'undefined' && error) { %>
+        <div class="alert alert-danger">
+          <%= error %>
+        </div>
+      <% } %>
+
+      <form method="POST" action="/otp?email=<%= email %>" class="otp-form">
+        <div class="input-group">
+          <label for="otp" class="input-label">Enter OTP</label>
+          <input type="text" class="input-field" id="otp" name="otp" required>
+        </div>
+
+        <% if (role === 'manager' || role === 'seller') { %>
+          <div class="input-group">
+            <label for="adminotp" class="input-label">Enter Admin OTP</label>
+            <input type="text" class="input-field" id="adminotp" name="adminotp" required>
+          </div>
+        <% } %>
+
+        <button type="submit" class="submit-btn">Verify OTP</button>
+      </form>
+    </div>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,33 @@
+.main-footer {
+    background-color: #222;
+    color: #f0f0f0;
+    text-align: center;
+    padding: 16px 10px;
+    font-size: 14px;
+    margin-top: 60px;
+    border-top: 2px solid #3498db;
+    box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.2);
+  }
+  
+  .main-footer strong {
+    color: #ffffff;
+    font-weight: 600;
+  }
+  
+  html {
+    height: 100%;
+    /* overflow-y: hidden; */
+  }
+  
+  body {
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    /* overflow: hidden; */
+  }
+  /* Optional: To prevent small overflows from triggering scrollbars */
+  /* * {
+    box-sizing: border-box;
+  }
+   */

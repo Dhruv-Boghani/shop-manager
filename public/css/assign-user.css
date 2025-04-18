@@ -1,0 +1,134 @@
+/* General Reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f0f2f5;
+  /* padding: 20px; */
+}
+
+/* Main container */
+.container {
+  max-width: 600px;
+  margin: 60px auto;
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* Page title */
+.page-title {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #0d6efd;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Info text */
+.current-info,
+.no-assignment {
+  font-size: 1rem;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Form spacing */
+.form-space {
+  margin-bottom: 30px;
+}
+
+/* Label and select */
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #444;
+}
+
+select {
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+/* Button styles */
+.btn {
+  padding: 12px 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+/* Button colors */
+.btn.success {
+  background-color: #198754;
+  color: white;
+}
+
+.btn.success:hover {
+  background-color: #157347;
+}
+
+.btn.danger {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn.danger:hover {
+  background-color: #b02a37;
+}
+
+.btn.secondary {
+  background-color: #6c757d;
+  color: white;
+  margin-left: 10px;
+}
+
+.btn.secondary:hover {
+  background-color: #5a6268;
+}
+
+/* Button group */
+.btn-group {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+  .container {
+    margin: 30px 15px;
+    padding: 20px;
+  }
+
+  .page-title {
+    font-size: 1.4rem;
+  }
+
+  .btn {
+    width: 100%;
+    padding: 12px;
+  }
+
+  .btn-group {
+    flex-direction: column;
+    gap: 15px;
+  }
+}

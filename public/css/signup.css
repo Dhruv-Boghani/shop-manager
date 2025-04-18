@@ -1,0 +1,120 @@
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  body {
+    background-color: #f1f1f1;
+  }
+  
+  /* Main container */
+  .signup-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+  }
+  
+  /* Card */
+  .signup-card {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 450px;
+  }
+  
+  /* Title */
+  .signup-title {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #333;
+    font-size: 1.8rem;
+  }
+  
+  /* Form styling */
+  .signup-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .signup-group {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .signup-group label {
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .signup-group input,
+  .signup-group select {
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+  }
+  
+  /* Button */
+  .signup-button {
+    margin-top: 10px;
+    padding: 12px;
+    background-color: #28a745;
+    color: #fff;
+    font-size: 1rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .signup-button:hover {
+    background-color: #218838;
+  }
+  
+  /* Footer */
+  .signup-footer {
+    margin-top: 20px;
+    text-align: center;
+  }
+  
+  .login-link {
+    margin-top: 10px;
+    display: inline-block;
+    padding: 10px 16px;
+    color: #007bff;
+    border: 1px solid #007bff;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: 0.3s;
+  }
+  
+  .login-link:hover {
+    background-color: #007bff;
+    color: #fff;
+  }
+  
+  /* Responsive */
+  @media (max-width: 500px) {
+    .signup-card {
+      padding: 20px;
+    }
+
+    .signup-container{
+        padding: 0px;
+        margin-top: 20px;
+    }
+  
+    .signup-title {
+      font-size: 1.5rem;
+    }
+  }
+  

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Product</title>
+  <link rel="stylesheet" href="/css/edit-product.css">
+</head>
+<body class="custom-body">
+  <div class="custom-container">
+    <h2 class="custom-heading">Edit Product</h2>
+
+    <form action="/product/edit/<%= product._id %>" method="POST">
+      <div class="input-group">
+        <label for="productSKU" class="input-label">Product SKU</label>
+        <input type="text" name="productSKU" id="productSKU" class="input-field" value="<%= product.productSKU %>" required>
+      </div>
+
+      <div class="input-group">
+        <label for="name" class="input-label">Product Name</label>
+        <input type="text" name="name" id="name" class="input-field" value="<%= product.name %>" required>
+      </div>
+
+      <div class="input-group">
+        <label for="buyPrice" class="input-label">Buy Price</label>
+        <input type="number" name="buyPrice" id="buyPrice" class="input-field" value="<%= product.buyPrice %>" required>
+      </div>
+
+      <div class="input-group">
+        <label for="salePrice" class="input-label">Sale Price</label>
+        <input type="number" name="salePrice" id="salePrice" class="input-field" value="<%= product.salePrice %>" required>
+      </div>
+
+      <div class="input-group">
+        <label for="description" class="input-label">Description</label>
+        <textarea name="description" id="description" class="input-field textarea" rows="3"><%= product.description %></textarea>
+      </div>
+
+      <div class="btn-group">
+        <button type="submit" class="submit-btn">Update Product</button>
+        <a href="/product" class="cancel-btn">Cancel</a>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

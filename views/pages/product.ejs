@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>All Products - MyShop</title>
+  <link rel="stylesheet" href="/css/product.css"> <!-- Link to custom CSS -->
+  <link rel="stylesheet" href="/css/navbar.css"> <!-- Link to custom CSS -->
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+
+  <div class="product-container">
+    <div class="header">
+      <h2>All Products</h2>
+      <a href="/product/add" class="add-product-btn">+ Add Product</a>
+    </div>
+
+    <form class="search-form" method="GET" action="/product">
+      <input type="text" name="search" class="search-input" placeholder="Search by name or SKU..." />
+    </form>
+
+    <% if (products.length === 0) { %>
+      <div class="alert alert-warning">No products found!</div>
+    <% } else { %>
+      <div class="table-container">
+        <table class="product-table">
+          <thead>
+            <tr>
+              <th>SKU</th>
+              <th>Name</th>
+              <th>Buy Price</th>
+              <th>Sale Price</th>
+              <th>Description</th>
+              <th>Actions</th> <!-- New column -->
+            </tr>
+          </thead>
+          <tbody>
+            <% products.forEach(product => { %>
+              <tr>
+                <td><%= product.productSKU %></td>
+                <td><%= product.name %></td>
+                <td>₹<%= product.buyPrice %></td>
+                <td>₹<%= product.salePrice %></td>
+                <td><%= product.description %></td>
+                <td>
+                  <a href="/product/edit/<%= product._id %>" class="edit-btn">Edit</a>
+                  <form action="/product/delete/<%= product._id %>" method="POST" class="delete-form">
+                    <button class="delete-btn" onclick="return confirm('Are you sure?')">Delete</button>
+                  </form>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </div>
+
+  <script src="/js/script.js"></script> <!-- Add custom JS if needed -->
+</body>
+</html>

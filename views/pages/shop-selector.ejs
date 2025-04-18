@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Select Shop</title>
+  <link rel="stylesheet" href="/css/shop-selector.css" />
+  <link rel="stylesheet" href="/css/navbar.css" />
+</head>
+<body class="custom-body">
+  <%- include('../partials/navbar') %>
+
+  <div class="shop-container">
+    <div class="shop-card">
+      <h2 class="shop-title">Choose a Shop</h2>
+      <form action="/bill" method="POST" class="shop-form">
+        <select name="shop" class="shop-select" required>
+          <% shops.forEach(shop => { %>
+            <option value="<%= shop._id %>"><%= shop.name %></option>
+          <% }) %>
+        </select>
+        <button type="submit" class="shop-button">Proceed</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

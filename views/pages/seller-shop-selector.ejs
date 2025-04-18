@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Select Shop</title>
+  <link rel="stylesheet" href="/css/seller-shop-selector.css">
+  <link rel="stylesheet" href="/css/navbar.css">
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+
+  <div class="seller-container">
+    <h3 class="seller-heading">Select a Shop</h3>
+    <form method="POST" action="/bill/send-otp" class="seller-form">
+      <div class="form-group">
+        <label for="shopId" class="form-label">Shop</label>
+        <select name="shopId" id="shopId" class="form-select" required>
+          <% shops.forEach(shop => { %>
+            <option value="<%= shop._id %>"><%= shop.name %></option>
+          <% }) %>
+        </select>
+      </div>
+      <button type="submit" class="submit-btn">Request OTP</button>
+    </form>
+  </div>
+</body>
+</html>

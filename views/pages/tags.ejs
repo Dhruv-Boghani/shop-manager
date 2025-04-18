@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tags - MyShop</title>
+  <link href="/css/tags.css" rel="stylesheet">
+  <link href="/css/navbar.css" rel="stylesheet">
+</head>
+<body>
+
+<%- include('../partials/navbar') %>
+
+<div class="tag-container">
+  <h2 class="page-title">Tag List</h2>
+
+  <input type="text" id="searchInput" class="search-box" placeholder="Search by Tag ID or Item Name...">
+
+  <div class="table-wrapper">
+    <table class="tag-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Tag ID</th>
+          <th>Item Name</th>
+          <th>Price (₹)</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="tagTableBody">
+        <% tags.forEach((tag, index) => { %>
+          <tr>
+            <td><%= index + 1 %></td>
+            <td><%= tag._id %></td>
+            <td><%= tag.itemName %></td>
+            <td><%= tag.price %></td>
+            <td>
+              <form action="/tags/delete/<%= tag._id %>" method="POST" onsubmit="return confirm('Are you sure to delete this tag?');">
+                <button class="delete-btn" type="submit">Delete</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  const searchInput = document.getElementById('searchInput');
+  const tagTableBody = document.getElementById('tagTableBody');
+
+  searchInput.addEventListener('input', async () => {
+    const query = searchInput.value.trim();
+    const res = await fetch(`/tags/search?q=${query}`);
+    const tags = await res.json();
+
+    tagTableBody.innerHTML = '';
+
+    if (tags.length === 0) {
+      tagTableBody.innerHTML = `
+        <tr>
+          <td colspan="5" class="no-tags">No tags found</td>
+        </tr>`;
+      return;
+    }
+
+    tags.forEach((tag, index) => {
+      tagTableBody.innerHTML += `
+        <tr>
+          <td>${index + 1}</td>
+          <td>${tag._id}</td>
+          <td>${tag.itemName}</td>
+          <td>${tag.price}</td>
+          <td>
+            <form action="/tags/delete/${tag._id}" method="POST" onsubmit="return confirm('Are you sure to delete this tag?');">
+              <button class="delete-btn" type="submit">Delete</button>
+            </form>
+          </td>
+        </tr>
+      `;
+    });
+  });
+</script>
+
+</body>
+</html>
