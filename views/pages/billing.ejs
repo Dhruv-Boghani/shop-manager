@@ -32,7 +32,7 @@
       <label for="cameraSelect" class="form-label">Select Camera</label>
       <select id="cameraSelect" class="form-select" style="max-width: 500px;"></select>
     </div>
-
+    
     <div class="form-section">
       <h5 class="mb-3">📷 QR / Barcode Scanner</h5>
       <div id="reader" style="width: 100%; max-width: 500px;"></div>
@@ -64,7 +64,7 @@
   </div>
 
   <script>
-
+    
     const beep = document.getElementById("beep-sound");
     let scannedTags = new Set();
     const lastResultEl = document.getElementById("lastResult");
@@ -124,46 +124,41 @@
     });
 
     // QR Scanner
-    const cameraSelect = document.getElementById("cameraSelect");
-    let currentCameraId = null;
+  const cameraSelect = document.getElementById("cameraSelect");
+  let currentCameraId = null;
     const html5QrCode = new Html5Qrcode("reader");
 
     function startScanner(cameraId) {
-      html5QrCode.stop().catch(() => { }).finally(() => {
+    html5QrCode.stop().catch(() => {}).finally(() => {
+      html5QrCode.start(
+        cameraId,
+        { fps: 10 },
+        (decodedText) => {
+          addTagToTable(decodedText.trim());
+        },
+        (errorMessage) => {
+          // Optional: console.log("QR error", errorMessage);
+        }
+      );
+    });
+  }
+  
+    Html5Qrcode.getCameras().then(cameras => {
+      if (cameras && cameras.length) {
+        const cameraId = cameras[0].id;
         html5QrCode.start(
           cameraId,
-          { fps: 10 },
+          {
+            fps: 10
+            
+          },
           (decodedText) => {
             addTagToTable(decodedText.trim());
           },
           (errorMessage) => {
-            // Optional: console.log("QR error", errorMessage);
+            // console.warn("QR Error", errorMessage);
           }
         );
-      });
-    }
-
-    Html5Qrcode.getCameras().then(cameras => {
-      if (cameras.length) {
-        cameras.forEach(cam => {
-          const option = document.createElement("option");
-          option.value = cam.id;
-          option.text = cam.label || `Camera ${cameraSelect.length + 1}`;
-          cameraSelect.appendChild(option);
-        });
-
-        // Start with the first camera
-        currentCameraId = cameras[0].id;
-        startScanner(currentCameraId);
-
-        // Handle camera switch
-        cameraSelect.addEventListener("change", () => {
-          const selectedId = cameraSelect.value;
-          if (selectedId !== currentCameraId) {
-            currentCameraId = selectedId;
-            startScanner(selectedId);
-          }
-        });
       }
     }).catch(err => {
       console.error("Camera error:", err);
