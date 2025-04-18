@@ -19,6 +19,7 @@ registerFont(path.join(__dirname, '../../fonts/OpenSans-Regular.ttf'), {
   family: 'OpenSans',
 });
 
+
 mongoose.set('strictPopulate', false);
 
 const validateTag = [
