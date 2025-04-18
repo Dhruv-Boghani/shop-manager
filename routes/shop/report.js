@@ -56,10 +56,12 @@ router.get('/', async (req, res) => {
         table.push({
           index: index++,
           name,
+          sku,
           buyPrice,
           quantity,
           investment,
         });
+        
 
         totalInvestment += investment;
       }
