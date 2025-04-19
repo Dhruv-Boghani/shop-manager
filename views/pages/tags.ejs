@@ -23,6 +23,7 @@
           <th>#</th>
           <th>Tag ID</th>
           <th>Item Name</th>
+          <th>Shop Name</th>
           <th>Price (₹)</th>
           <th>Action</th>
         </tr>
@@ -32,6 +33,7 @@
           <tr>
             <td><%= index + 1 %></td>
             <td><%= tag._id %></td>
+            <td><%= tag.shop?.name || 'N/A' %></td>
             <td><%= tag.itemName %></td>
             <td><%= tag.price %></td>
             <td>
