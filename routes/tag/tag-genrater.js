@@ -119,6 +119,7 @@ router.get('/', async (req, res) => {
 router.post('/generate', validateTag, async (req, res) => {
   try {
     const errors = validationResult(req);
+
     const products = await Product.find({}, '_id name');
     const shops = await Shop.find({}, '_id name');
 
@@ -135,12 +136,11 @@ router.post('/generate', validateTag, async (req, res) => {
     const shopId = new mongoose.Types.ObjectId(shop);
 
     const shopDoc = await Shop.findById(shopId);
-
-    // Check if product exists in the shop's product list
     if (!shopDoc || !shopDoc.product.some(id => id.toString() === productId.toString())) {
-      return res.status(400).render('./pages/error', {
-        message: 'Selected product is not assigned to the selected shop.',
-        error: null,
+      return res.status(400).render('./pages/tag-generator', {
+        products,
+        shops,
+        errors: [{ msg: 'Selected product is not assigned to the selected shop.' }],
       });
     }
 
@@ -212,10 +212,11 @@ router.post('/generate', validateTag, async (req, res) => {
     }, 3000);
 
   } catch (err) {
-    console.error('Error generating tags:', err);
-    res.status(500).render('./pages/error', {
-      message: 'Error generating tags',
-      error: err,
+    console.error('Error generating tags:', error);
+    res.status(500).render('./pages/tag-generator', {
+      products: await Product.find({}, '_id name'),
+      shops: await Shop.find({}, '_id name'),
+      errors: [{ msg: '❌ Error generating tags. Please try again.' }],
     });
   }
 });
