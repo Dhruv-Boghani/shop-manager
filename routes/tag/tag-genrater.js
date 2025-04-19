@@ -138,7 +138,7 @@ router.post('/generate', validateTag, async (req, res) => {
       const shop = await Shop.findById(shopId);
       const products = shop.product; // assuming this is an array of ObjectIds
 
-      if (!products.includes(productId)) {
+      if (!products.some(id => id.equals(productId))) {
         return res.status(500).render('./pages/error', {
           message: 'Product not present in shop',
           error: null,
