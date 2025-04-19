@@ -212,7 +212,7 @@ router.post('/generate', validateTag, async (req, res) => {
     }, 3000);
 
   } catch (err) {
-    console.error('Error generating tags:', error);
+    console.error('Error generating tags:', err);
     res.status(500).render('./pages/tag-generator', {
       products: await Product.find({}, '_id name'),
       shops: await Shop.find({}, '_id name'),
