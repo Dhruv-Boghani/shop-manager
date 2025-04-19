@@ -35,7 +35,7 @@
         </div>
       <% } %>
 
-      <form id="tagForm" method="POST" action="/tag/generate">
+      <form id="tagForm">
         <div class="input-group mb-3">
           <label for="product" class="form-label">Select Product</label>
           <select class="form-select" name="product" id="product" required>
@@ -75,11 +75,46 @@
   const form = document.getElementById('tagForm');
   const loader = document.getElementById('loader');
 
-  form.addEventListener('submit', () => {
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
     loader.style.display = 'block';
-    setTimeout(() => {
-      window.location.href = '/tag';
-    }, 5000); // 5 seconds redirect
+
+    const formData = new FormData(form);
+    const params = new URLSearchParams();
+    for (const [key, value] of formData) {
+      params.append(key, value);
+    }
+
+    try {
+      const res = await fetch('/tag/generate', {
+        method: 'POST',
+        body: params,
+      });
+
+      if (!res.ok) throw new Error('Failed to generate tags');
+
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'tags.pdf';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+
+      // Optional: wait a second and redirect
+      setTimeout(() => {
+        window.location.href = '/tags';
+      }, 1000);
+
+    } catch (err) {
+      alert('❌ Error generating tags. Please try again.');
+      console.error(err);
+    } finally {
+      loader.style.display = 'none';
+    }
   });
 </script>
 

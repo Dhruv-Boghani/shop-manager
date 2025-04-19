@@ -185,26 +185,30 @@ router.post('/generate', validateTag, async (req, res) => {
     }
 
     const pdfPath = path.join(tagDir, 'tags.pdf');
-    fs.writeFileSync(pdfPath, await pdfDoc.save());
+const pdfBuffer = await pdfDoc.save();
 
-    res.download(pdfPath, 'tags.pdf', (err) => {
-      if (err) console.error('Download error:', err);
+// Send PDF buffer directly with headers
+res.setHeader('Content-Type', 'application/pdf');
+res.setHeader('Content-Disposition', 'attachment; filename="tags.pdf"');
+res.send(pdfBuffer);
 
-      // Optional Cleanup
-      try {
-        [tagDir, qrPath, barcodePath].forEach((dir) => {
-          fs.readdir(dir, (err, files) => {
-            if (!err) {
-              for (const file of files) {
-                fs.unlink(path.join(dir, file), () => {});
-              }
-            }
-          });
-        });
-      } catch (cleanupErr) {
-        console.error('Cleanup error:', cleanupErr);
-      }
+// Optional: Cleanup after short delay (so response isn't interrupted)
+setTimeout(() => {
+  try {
+    [tagDir, qrPath, barcodePath].forEach((dir) => {
+      fs.readdir(dir, (err, files) => {
+        if (!err) {
+          for (const file of files) {
+            fs.unlink(path.join(dir, file), () => {});
+          }
+        }
+      });
     });
+  } catch (cleanupErr) {
+    console.error('Cleanup error:', cleanupErr);
+  }
+}, 3000); // Wait 3 seconds before cleaning
+
   } catch (err) {
     console.error('Error generating tags:', err);
     res.status(500).render('./pages/error', {
