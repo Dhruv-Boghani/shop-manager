@@ -10,7 +10,16 @@
   <!-- Custom CSS -->
   <link rel="stylesheet" href="/css/navbar.css">
   <link rel="stylesheet" href="/css/abill.css">
-  
+
+  <style>
+    #loader {
+      display: none;
+      text-align: center;
+      margin-top: 20px;
+      font-weight: bold;
+      color: #333;
+    }
+  </style>
 </head>
 
 <body>
@@ -18,16 +27,37 @@
 
   <div class="page-container">
     <h2>Welcome to MyShop</h2>
+
     <div class="button-grid">
       <a href="/billing" class="custom-btn blue">🧾 Make New Bill</a>
-      <a href="/billing/abill/download?id=<%= billId %>" class="custom-btn green">⬇️ Download Bill</a>
+      <button id="downloadBtn" class="custom-btn green">⬇️ Download Bill</button>
       <a href="/billing/abill/print?id=<%= billId %>" class="custom-btn orange">🖨️ Print Bill</a>
       <a href="/bill/changshop" class="custom-btn gray">🏪 Change Shop</a>
     </div>
+
+    <div id="loader">⏳ Preparing your bill... Please wait.</div>
   </div>
 
   <!-- Optional Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    const downloadBtn = document.getElementById('downloadBtn');
+    const loader = document.getElementById('loader');
+
+    downloadBtn.addEventListener('click', () => {
+      loader.style.display = 'block';
+
+      const iframe = document.createElement('iframe');
+      iframe.style.display = 'none';
+      iframe.src = '/billing/abill/download?id=<%= billId %>';
+      document.body.appendChild(iframe);
+
+      setTimeout(() => {
+        window.location.href = '/billing/abill?id=<%= billId %>';
+      }, 3000); // Wait 3 seconds before redirecting
+    });
+  </script>
 </body>
 
 </html>
