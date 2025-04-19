@@ -134,6 +134,25 @@ router.post('/generate', validateTag, async (req, res) => {
     const productId = new mongoose.Types.ObjectId(product);
     const shopId = new mongoose.Types.ObjectId(shop);
 
+    try {
+      const shop = await Shop.findById(shopId);
+      const products = shop.product; // assuming this is an array of ObjectIds
+
+      if (!products.includes(productId)) {
+        return res.status(500).render('./pages/error', {
+          message: 'Product not present in shop',
+          error: null,
+        });
+      }
+
+      // Continue with tag generation...
+    } catch (error) {
+      return res.status(500).render('./pages/error', {
+        message: 'Error generating tags',
+        error,
+      });
+    }
+
     const qrPath = path.join('/tmp', 'qrcodes');
     const barcodePath = path.join('/tmp', 'barcodes');
     const tagDir = path.join('/tmp', 'tags');
@@ -185,29 +204,29 @@ router.post('/generate', validateTag, async (req, res) => {
     }
 
     const pdfPath = path.join(tagDir, 'tags.pdf');
-const pdfBuffer = await pdfDoc.save();
+    const pdfBuffer = await pdfDoc.save();
 
-// Send PDF buffer directly with headers
-res.setHeader('Content-Type', 'application/pdf');
-res.setHeader('Content-Disposition', 'attachment; filename="tags.pdf"');
-res.send(pdfBuffer);
+    // Send PDF buffer directly with headers
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', 'attachment; filename="tags.pdf"');
+    res.send(pdfBuffer);
 
-// Optional: Cleanup after short delay (so response isn't interrupted)
-setTimeout(() => {
-  try {
-    [tagDir, qrPath, barcodePath].forEach((dir) => {
-      fs.readdir(dir, (err, files) => {
-        if (!err) {
-          for (const file of files) {
-            fs.unlink(path.join(dir, file), () => {});
-          }
-        }
-      });
-    });
-  } catch (cleanupErr) {
-    console.error('Cleanup error:', cleanupErr);
-  }
-}, 3000); // Wait 3 seconds before cleaning
+    // Optional: Cleanup after short delay (so response isn't interrupted)
+    setTimeout(() => {
+      try {
+        [tagDir, qrPath, barcodePath].forEach((dir) => {
+          fs.readdir(dir, (err, files) => {
+            if (!err) {
+              for (const file of files) {
+                fs.unlink(path.join(dir, file), () => { });
+              }
+            }
+          });
+        });
+      } catch (cleanupErr) {
+        console.error('Cleanup error:', cleanupErr);
+      }
+    }, 3000); // Wait 3 seconds before cleaning
 
   } catch (err) {
     console.error('Error generating tags:', err);
