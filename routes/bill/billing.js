@@ -60,13 +60,15 @@ router.post("/", validateBill, async (req, res) => {
     }
   }
   
-  const getNextCount = async (name) => {
+  const getNextCount = async () => {
+    // Always find and update the single counter document
     let counter = await Counter.findOneAndUpdate(
-      { name },
+      {}, // No filter = only one counter allowed
       { $inc: { value: 1 } },
-      { new: true, upsert: true }
+      { new: true, upsert: true } // Create if not exists
     );
   
+    // Reset if over 999
     if (counter.value >= 1000) {
       counter.value = 0;
       await counter.save();
@@ -75,9 +77,9 @@ router.post("/", validateBill, async (req, res) => {
     return counter.value;
   };
   
-  // Increment and reset logic
-  const billno = await getNextCount(String(totalReceivingAmount));
-
+  // Usage
+  const billno = await getNextCount();
+  
   // product array
   const products = [];
 

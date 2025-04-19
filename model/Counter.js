@@ -1,10 +1,6 @@
-const mongoose = require('mongoose'); // <-- THIS IS MISSING IN YOUR ERROR
+const mongoose = require('mongoose');
 
 const counterSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-  },
   value: {
     type: Number,
     default: 0,
