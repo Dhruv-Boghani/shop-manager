@@ -134,22 +134,13 @@ router.post('/generate', validateTag, async (req, res) => {
     const productId = new mongoose.Types.ObjectId(product);
     const shopId = new mongoose.Types.ObjectId(shop);
 
-    try {
-      const shop = await Shop.findById(shopId);
-      const products = shop.product; // assuming this is an array of ObjectIds
+    const shopDoc = await Shop.findById(shopId);
 
-      if (!products.some(id => id.equals(productId))) {
-        return res.status(500).render('./pages/error', {
-          message: 'Product not present in shop',
-          error: null,
-        });
-      }
-
-      // Continue with tag generation...
-    } catch (error) {
-      return res.status(500).render('./pages/error', {
-        message: 'Error generating tags',
-        error,
+    // Check if product exists in the shop's product list
+    if (!shopDoc || !shopDoc.product.some(id => id.toString() === productId.toString())) {
+      return res.status(400).render('./pages/error', {
+        message: 'Selected product is not assigned to the selected shop.',
+        error: null,
       });
     }
 
@@ -171,11 +162,9 @@ router.post('/generate', validateTag, async (req, res) => {
       const savedTag = await tag.save();
       const tagId = savedTag._id.toString();
 
-      // Generate QR code
       const qrFile = path.join(qrPath, `${tagId}.png`);
       await QRCode.toFile(qrFile, tagId);
 
-      // Generate Barcode
       const barcodeFile = path.join(barcodePath, `${tagId}.png`);
       const barcodeBuffer = await bwipjs.toBuffer({
         bcid: 'code128',
@@ -187,13 +176,11 @@ router.post('/generate', validateTag, async (req, res) => {
       });
       fs.writeFileSync(barcodeFile, barcodeBuffer);
 
-      // Generate Image Tag
       const details = await fetchDetails(productId, shopId, tagId, qrFile, barcodeFile);
       const tagPath = await generateTagImage(details, tagDir);
       tagImagePaths.push(tagPath);
     }
 
-    // Create PDF from images
     const pdfDoc = await PDFDocument.create();
 
     for (const tagImagePath of tagImagePaths) {
@@ -203,15 +190,11 @@ router.post('/generate', validateTag, async (req, res) => {
       page.drawImage(image, { x: 0, y: 0, width: image.width, height: image.height });
     }
 
-    const pdfPath = path.join(tagDir, 'tags.pdf');
     const pdfBuffer = await pdfDoc.save();
-
-    // Send PDF buffer directly with headers
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', 'attachment; filename="tags.pdf"');
     res.send(pdfBuffer);
 
-    // Optional: Cleanup after short delay (so response isn't interrupted)
     setTimeout(() => {
       try {
         [tagDir, qrPath, barcodePath].forEach((dir) => {
@@ -226,7 +209,7 @@ router.post('/generate', validateTag, async (req, res) => {
       } catch (cleanupErr) {
         console.error('Cleanup error:', cleanupErr);
       }
-    }, 3000); // Wait 3 seconds before cleaning
+    }, 3000);
 
   } catch (err) {
     console.error('Error generating tags:', err);
@@ -236,5 +219,6 @@ router.post('/generate', validateTag, async (req, res) => {
     });
   }
 });
+
 
 module.exports = router;
