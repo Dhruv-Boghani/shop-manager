@@ -6,9 +6,18 @@
   <title>Tag Generator | MyShop</title>
   <link href="/css/tag-generator.css" rel="stylesheet">
   <link href="/css/navbar.css" rel="stylesheet">
+  <style>
+    #loader {
+      display: none;
+      text-align: center;
+      margin-top: 20px;
+      font-weight: bold;
+      color: #333;
+    }
+  </style>
 </head>
 <body>
-    
+
 <%- include('../partials/navbar') %>
 
 <div class="container mt-5">
@@ -26,7 +35,7 @@
         </div>
       <% } %>
 
-      <form method="POST" action="/tag/generate">
+      <form id="tagForm" method="POST" action="/tag/generate">
         <div class="input-group mb-3">
           <label for="product" class="form-label">Select Product</label>
           <select class="form-select" name="product" id="product" required>
@@ -52,12 +61,27 @@
 
         <button type="submit" class="btn btn-primary full-width">Generate & Download Tags</button>
       </form>
+
+      <div id="loader">⏳ Generating & downloading tags... Please wait.</div>
     </div>
   </div>
+
   <div class="d-flex justify-content-center mt-4">
     <a href="/tags" class="btn btn-secondary">Tags</a>
   </div>
 </div>
+
+<script>
+  const form = document.getElementById('tagForm');
+  const loader = document.getElementById('loader');
+
+  form.addEventListener('submit', () => {
+    loader.style.display = 'block';
+    setTimeout(() => {
+      window.location.href = '/tag';
+    }, 3500); // 5 seconds redirect
+  });
+</script>
 
 </body>
 </html>
