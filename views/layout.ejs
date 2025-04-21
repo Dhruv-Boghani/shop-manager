@@ -51,21 +51,41 @@
     <div class="spinner"></div>
   </div>
 
+  <!-- Page Content -->
   <%- body %>
 
+  <!-- Script to handle loader -->
   <script>
-    // Show loader on link and button clicks
-    document.querySelectorAll("a, button").forEach(el => {
-      el.addEventListener("click", () => {
-        if (!el.classList.contains("no-loader")) {
-          document.getElementById("page-loader").style.display = "flex";
-        }
-      });
+    let isBackOrForward = false;
+
+    // Detect back/forward navigation
+    window.addEventListener('pageshow', function (event) {
+      if (event.persisted || window.performance?.navigation?.type === 2) {
+        isBackOrForward = true;
+      }
     });
 
-    // Optional: Hide loader on full page load
-    window.addEventListener('load', () => {
-      document.getElementById("page-loader").style.display = "none";
+    // Show loader on link or button click, except if "no-loader" is present
+    document.addEventListener("DOMContentLoaded", function () {
+      const loader = document.getElementById("page-loader");
+
+      document.querySelectorAll("a, button").forEach(el => {
+        el.addEventListener("click", (e) => {
+          if (!el.classList.contains("no-loader") && !isBackOrForward) {
+            loader.style.display = "flex";
+          }
+        });
+      });
+
+      // Optional: Hide loader on full page load
+      window.addEventListener('load', () => {
+        loader.style.display = "none";
+      });
+
+      // Prevent loader when user uses back/forward navigation
+      window.addEventListener('popstate', function () {
+        loader.style.display = "none";
+      });
     });
   </script>
 </body>
