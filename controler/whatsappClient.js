@@ -1,21 +1,19 @@
+// whatsapp.js
 const { Client } = require('whatsapp-web.js');
 const mongoose = require('mongoose');
 const qrcode = require('qrcode-terminal');
 
-// 📄 Session schema
 const SessionSchema = new mongoose.Schema({
     _id: String,
     session: Buffer,
 });
 const Session = mongoose.model('Session', SessionSchema);
 
-// 🌐 Load session from MongoDB
 async function loadSession() {
     const sessionDoc = await Session.findById('default');
     return sessionDoc ? sessionDoc.session : null;
 }
 
-// 💾 Save session to MongoDB
 async function saveSession(session) {
     await Session.findByIdAndUpdate(
         'default',
@@ -24,11 +22,12 @@ async function saveSession(session) {
     );
 }
 
-// 🧠 Main
-(async () => {
+let client;
+
+async function initializeClient() {
     const sessionData = await loadSession();
 
-    const client = new Client({
+    client = new Client({
         session: sessionData ? JSON.parse(sessionData.toString()) : undefined,
     });
 
@@ -46,13 +45,19 @@ async function saveSession(session) {
         await saveSession(Buffer.from(JSON.stringify(session)));
     });
 
-    client.on('auth_failure', (msg) => {
-        console.error('❌ Auth failed:', msg);
+    client.on('auth_failure', msg => {
+        console.error('❌ Auth failure:', msg);
     });
 
-    client.on('disconnected', (reason) => {
-        console.log('⚠️ Disconnected:', reason);
+    client.on('disconnected', reason => {
+        console.log('⚠️ Client disconnected:', reason);
     });
 
     await client.initialize();
-})();
+}
+
+initializeClient();
+
+module.exports = {
+    getClient: () => client,
+};
