@@ -1,53 +1,49 @@
-const makeWASocket = require('@whiskeysockets/baileys').default;
-const { useSingleFileAuthState } = require('@whiskeysockets/baileys');
-const { MongoClient } = require('mongodb');
-const qrcode = require('qrcode-terminal');
-const fs = require('fs');
+const { MongoClient } = require("mongodb");
+const makeWASocket = require("@whiskeysockets/baileys").default;
+const { useMongoDBAuthState } = require("@whiskeysockets/baileys");
+const { Boom } = require("@hapi/boom");
+const { default: pino } = require("pino");
+const qrcode = require("qrcode");
 
-const SESSION_FILE_PATH = './auth_info.json';
+const mongoose = require("mongoose");
 
 let sock;
 
-// This function handles all Baileys events and state
-async function initializeClient() {
-    console.log('🔧 Initializing Baileys WhatsApp client...');
-
-    // Store auth state in file (this works even after Render restarts)
-    const { state, saveCreds } = useSingleFileAuthState(SESSION_FILE_PATH);
+async function connectToWhatsApp() {
+    const { state, saveCreds } = await useMongoDBAuthState(mongoose.connection.db);
 
     sock = makeWASocket({
+        printQRInTerminal: false, // We will show QR using 'qrcode' package
+        logger: pino({ level: "silent" }),
         auth: state,
-        printQRInTerminal: true, // Automatically shows QR
-        browser: ['Baileys', 'Desktop', '1.0'],
     });
 
-    // Automatically handle QR in console
-    sock.ev.on('connection.update', (update) => {
-        const { connection, lastDisconnect, qr } = update;
-
+    // Show QR code
+    sock.ev.on("connection.update", async (update) => {
+        const { connection, qr } = update;
         if (qr) {
-            console.log('📲 Scan the QR Code below:');
-            qrcode.generate(qr, { small: true });
+            console.log("📲 Scan this QR code to login:");
+            qrcode.toString(qr, { type: "terminal" }, (err, url) => {
+                console.log(url);
+            });
         }
-
-        if (connection === 'open') {
-            console.log('✅ WhatsApp connection established!');
-        } else if (connection === 'close') {
-            const shouldReconnect = lastDisconnect?.error?.output?.statusCode !== 401;
-            console.log('❌ Connection closed. Reconnecting:', shouldReconnect);
-            if (shouldReconnect) initializeClient();
+        if (connection === "open") {
+            console.log("✅ WhatsApp is connected");
+        }
+        if (connection === "close") {
+            const shouldReconnect = (update.lastDisconnect?.error as Boom)?.output?.statusCode !== 401;
+            console.log("❌ Connection closed. Reconnecting:", shouldReconnect);
+            if (shouldReconnect) {
+                await connectToWhatsApp();
+            }
         }
     });
 
-    sock.ev.on('creds.update', saveCreds);
-
-    return sock;
+    sock.ev.on("creds.update", saveCreds);
 }
 
-// Initialize once
-initializeClient().catch(err => console.error('❌ Failed to initialize Baileys client:', err));
+connectToWhatsApp();
 
-// Export the client getter
 module.exports = {
-    getClient: () => sock
+    getClient: () => sock,
 };
