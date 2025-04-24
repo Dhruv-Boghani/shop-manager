@@ -31,8 +31,9 @@ async function connectToWhatsApp() {
             console.log("✅ WhatsApp is connected");
         }
         if (connection === "close") {
-            const shouldReconnect = (update.lastDisconnect?.error as Boom)?.output?.statusCode !== 401;
-            console.log("❌ Connection closed. Reconnecting:", shouldReconnect);
+            const statusCode = update.lastDisconnect?.error?.output?.statusCode;
+            const shouldReconnect = statusCode !== 401;
+                        console.log("❌ Connection closed. Reconnecting:", shouldReconnect);
             if (shouldReconnect) {
                 await connectToWhatsApp();
             }
