@@ -1,24 +1,30 @@
+const fs = require('fs');
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 
+// Use LocalAuth to persist session data
 const client = new Client({
-  authStrategy: new LocalAuth(), // saves login session
+    authStrategy: new LocalAuth({
+        dataPath: './.wwebjs_auth' // Folder to store session
+    })
 });
 
 client.on('qr', (qr) => {
-  console.log("📲 Scan the QR Code below:");
-  qrcode.generate(qr, { small: false });
+    qrcode.generate(qr, { small: true });
+    console.log('Scan the QR code above');
 });
 
 client.on('ready', () => {
-  console.log("✅ WhatsApp Client is ready!");
+    console.log('✅ WhatsApp client is ready!');
+    // You can now send messages safely
+});
 
-  // ✅ Now it's safe to send a message
-  client.sendMessage('123456789@c.us', 'Hello from the shop system!')
-  .then(() => console.log("Message sent!"))
-  .catch(console.error);
+client.on('auth_failure', msg => {
+    console.error('❌ Authentication failed:', msg);
+});
+
+client.on('disconnected', reason => {
+    console.log('⚠️ Client was logged out:', reason);
 });
 
 client.initialize();
-
-module.exports = client;
