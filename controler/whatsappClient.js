@@ -1,30 +1,58 @@
-const fs = require('fs');
-const { Client, LocalAuth } = require('whatsapp-web.js');
+const { Client } = require('whatsapp-web.js');
+const mongoose = require('mongoose');
 const qrcode = require('qrcode-terminal');
 
-// Use LocalAuth to persist session data
-const client = new Client({
-    authStrategy: new LocalAuth({
-        dataPath: './.wwebjs_auth' // Folder to store session
-    })
+// 📄 Session schema
+const SessionSchema = new mongoose.Schema({
+    _id: String,
+    session: Buffer,
 });
+const Session = mongoose.model('Session', SessionSchema);
 
-client.on('qr', (qr) => {
-    qrcode.generate(qr, { small: true });
-    console.log('Scan the QR code above');
-});
+// 🌐 Load session from MongoDB
+async function loadSession() {
+    const sessionDoc = await Session.findById('default');
+    return sessionDoc ? sessionDoc.session : null;
+}
 
-client.on('ready', () => {
-    console.log('✅ WhatsApp client is ready!');
-    // You can now send messages safely
-});
+// 💾 Save session to MongoDB
+async function saveSession(session) {
+    await Session.findByIdAndUpdate(
+        'default',
+        { session },
+        { upsert: true, new: true }
+    );
+}
 
-client.on('auth_failure', msg => {
-    console.error('❌ Authentication failed:', msg);
-});
+// 🧠 Main
+(async () => {
+    const sessionData = await loadSession();
 
-client.on('disconnected', reason => {
-    console.log('⚠️ Client was logged out:', reason);
-});
+    const client = new Client({
+        session: sessionData ? JSON.parse(sessionData.toString()) : undefined,
+    });
 
-client.initialize();
+    client.on('qr', qr => {
+        console.log('Scan this QR:');
+        qrcode.generate(qr, { small: true });
+    });
+
+    client.on('ready', () => {
+        console.log('✅ WhatsApp is ready');
+    });
+
+    client.on('authenticated', async (session) => {
+        console.log('🔐 Authenticated, saving session...');
+        await saveSession(Buffer.from(JSON.stringify(session)));
+    });
+
+    client.on('auth_failure', (msg) => {
+        console.error('❌ Auth failed:', msg);
+    });
+
+    client.on('disconnected', (reason) => {
+        console.log('⚠️ Disconnected:', reason);
+    });
+
+    await client.initialize();
+})();
