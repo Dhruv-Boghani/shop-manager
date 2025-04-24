@@ -8,23 +8,33 @@ let sock;
 
 // MongoDB session loading
 async function loadSession() {
-    const session = await mongoose.connection.db.collection('sessions').findOne({ _id: 'default' });
-    return session ? session.session : null;
+    try {
+        const session = await mongoose.connection.db.collection('sessions').findOne({ _id: 'default' });
+        return session ? session.session : null;
+    } catch (error) {
+        console.error("Error loading session from MongoDB:", error);
+        return null;
+    }
 }
 
 // MongoDB session saving
 async function saveSession(session) {
-    await mongoose.connection.db.collection('sessions').updateOne(
-        { _id: 'default' },
-        { $set: { session } },
-        { upsert: true }
-    );
+    try {
+        await mongoose.connection.db.collection('sessions').updateOne(
+            { _id: 'default' },
+            { $set: { session } },
+            { upsert: true }
+        );
+    } catch (error) {
+        console.error("Error saving session to MongoDB:", error);
+    }
 }
 
 async function connectToWhatsApp() {
     try {
         // Load session from MongoDB
         const sessionData = await loadSession();
+        console.log('Session loaded:', sessionData ? 'Yes' : 'No session found');
 
         // Create the socket connection using the session
         sock = makeWASocket({
@@ -44,7 +54,7 @@ async function connectToWhatsApp() {
                         console.error('❌ Error generating QR code:', err);
                         return;
                     }
-                    console.log(url); // Show QR code
+                    console.log(url); // Show QR code in terminal
                 });
             }
 
