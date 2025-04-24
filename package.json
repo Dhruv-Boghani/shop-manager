@@ -15,6 +15,7 @@
     "nodemon": "^3.1.9"
   },
   "dependencies": {
+    "@whiskeysockets/baileys": "^6.17.16",
     "archiver": "^7.0.1",
     "bcrypt": "^5.1.1",
     "bwip-js": "^4.5.3",
