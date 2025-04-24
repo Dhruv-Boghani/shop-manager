@@ -32,15 +32,19 @@ async function saveSession(session) {
 
 async function connectToWhatsApp() {
     try {
-        // Load session from MongoDB
+        // Load session from MongoDB or use null if not found
         const sessionData = await loadSession();
-        console.log('Session loaded:', sessionData ? 'Yes' : 'No session found');
+        if (sessionData) {
+            console.log('Session loaded successfully.');
+        } else {
+            console.log('Session not found. Scanning QR...');
+        }
 
         // Create the socket connection using the session
         sock = makeWASocket({
             printQRInTerminal: false, // Show QR code in terminal using qrcode
             logger: pino({ level: "silent" }), // Logging setup (silent to suppress logs)
-            auth: sessionData, // Use session for authentication
+            auth: sessionData || {}, // Use session for authentication (or empty object if no session)
         });
 
         // Event: Connection update (handles QR code and connection status)
@@ -60,6 +64,7 @@ async function connectToWhatsApp() {
 
             if (connection === "open") {
                 console.log("✅ WhatsApp is connected");
+                await saveSession(sock.authState); // Save session after successful connection
             }
 
             if (connection === "close") {
