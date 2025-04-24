@@ -1,63 +1,53 @@
-// whatsapp.js
-const { Client } = require('whatsapp-web.js');
-const mongoose = require('mongoose');
+const makeWASocket = require('@whiskeysockets/baileys').default;
+const { useSingleFileAuthState } = require('@whiskeysockets/baileys');
+const { MongoClient } = require('mongodb');
 const qrcode = require('qrcode-terminal');
+const fs = require('fs');
 
-const SessionSchema = new mongoose.Schema({
-    _id: String,
-    session: Buffer,
-});
-const Session = mongoose.model('Session', SessionSchema);
+const SESSION_FILE_PATH = './auth_info.json';
 
-async function loadSession() {
-    const sessionDoc = await Session.findById('default');
-    return sessionDoc ? sessionDoc.session : null;
-}
+let sock;
 
-async function saveSession(session) {
-    await Session.findByIdAndUpdate(
-        'default',
-        { session },
-        { upsert: true, new: true }
-    );
-}
-
-let client;
-
+// This function handles all Baileys events and state
 async function initializeClient() {
-    const sessionData = await loadSession();
+    console.log('🔧 Initializing Baileys WhatsApp client...');
 
-    client = new Client({
-        session: sessionData ? JSON.parse(sessionData.toString()) : undefined,
+    // Store auth state in file (this works even after Render restarts)
+    const { state, saveCreds } = useSingleFileAuthState(SESSION_FILE_PATH);
+
+    sock = makeWASocket({
+        auth: state,
+        printQRInTerminal: true, // Automatically shows QR
+        browser: ['Baileys', 'Desktop', '1.0'],
     });
 
-    client.on('qr', qr => {
-        console.log('Scan this QR:');
-        qrcode.generate(qr, { small: true });
+    // Automatically handle QR in console
+    sock.ev.on('connection.update', (update) => {
+        const { connection, lastDisconnect, qr } = update;
+
+        if (qr) {
+            console.log('📲 Scan the QR Code below:');
+            qrcode.generate(qr, { small: true });
+        }
+
+        if (connection === 'open') {
+            console.log('✅ WhatsApp connection established!');
+        } else if (connection === 'close') {
+            const shouldReconnect = lastDisconnect?.error?.output?.statusCode !== 401;
+            console.log('❌ Connection closed. Reconnecting:', shouldReconnect);
+            if (shouldReconnect) initializeClient();
+        }
     });
 
-    client.on('ready', () => {
-        console.log('✅ WhatsApp is ready');
-    });
+    sock.ev.on('creds.update', saveCreds);
 
-    client.on('authenticated', async (session) => {
-        console.log('🔐 Authenticated, saving session...');
-        await saveSession(Buffer.from(JSON.stringify(session)));
-    });
-
-    client.on('auth_failure', msg => {
-        console.error('❌ Auth failure:', msg);
-    });
-
-    client.on('disconnected', reason => {
-        console.log('⚠️ Client disconnected:', reason);
-    });
-
-    await client.initialize();
+    return sock;
 }
 
-initializeClient();
+// Initialize once
+initializeClient().catch(err => console.error('❌ Failed to initialize Baileys client:', err));
 
+// Export the client getter
 module.exports = {
-    getClient: () => client,
+    getClient: () => sock
 };
