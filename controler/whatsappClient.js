@@ -12,6 +12,11 @@ client.on('qr', (qr) => {
 
 client.on('ready', () => {
   console.log("✅ WhatsApp Client is ready!");
+
+  // ✅ Now it's safe to send a message
+  client.sendMessage('123456789@c.us', 'Hello from the shop system!')
+  .then(() => console.log("Message sent!"))
+  .catch(console.error);
 });
 
 client.initialize();
