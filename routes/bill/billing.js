@@ -7,6 +7,7 @@ const Counter = require("../../model/Counter")
 const { body, validationResult } = require("express-validator");
 // const billingController = require("../../controler/create-bill");
 const jwt = require("jsonwebtoken");
+const whatsappController = require("../../controler/whatsapp")
 
 const router = express.Router();
 const jwtSecrate = "DhruvBoghani624@#";
@@ -143,6 +144,10 @@ router.post("/", validateBill, async (req, res) => {
   for (const tagId of tagIds) {
     await Tag.findByIdAndDelete(tagId);
   }
+
+  if (mobileNo) {
+    whatsappController(savebill._id);
+}
 
   req.body.shopId = shopId;
   res.redirect(`/billing/abill?id=${savebill._id}`);
