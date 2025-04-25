@@ -156,7 +156,7 @@ router.post('/generate', validateTag, async (req, res) => {
 
     for (let i = 0; i < no; i++) {
       const product = await Product.findById(productId);
-      const itemName = `${product.name}-(${product.name})`;
+      const itemName = `${product.name}-(${product.productSKU})`;
       const price = product.salePrice;
       const tag = new Tag({ product: productId, shop: shopId, itemName, price });
       const savedTag = await tag.save();

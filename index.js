@@ -6,6 +6,7 @@ const checkAuth = require('./middleware/auth');
 const cookieParser = require('cookie-parser');
 const expressLayouts = require('express-ejs-layouts');
 require('dotenv').config();
+const { initializeClient } = require('./controler/whatsappClient');
 
 
 const corsConfig = {
@@ -65,7 +66,10 @@ app.use('/assign', require('./routes/shop/assign'));
 
 //connection
 mongoose.connect(MONGO_URI)
-  .then(() => console.log('MongoDB connected'))
+  .then(() => {
+    console.log('MongoDB connected');
+    initializeClient();
+  })
   .catch(err => console.error('MongoDB connection error:', err));
 
 app.listen(PORT, () => {
