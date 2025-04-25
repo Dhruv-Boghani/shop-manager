@@ -1,2 +1,8 @@
 node_modules
 .vscode
+
+# managed
+**.data.json
+**.node-persist**
+**_IGNORE_**
+# end managed

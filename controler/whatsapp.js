@@ -1,48 +1,56 @@
 const Bill = require("../model/Bill");
 const generateBillCanvas = require("./generateBillCanvas");
-const { getClient } = require('./whatsappClient'); // Your custom Baileys client getter
+const { getClient } = require('./whatsappClient'); // Your whatsapp-web.js client
 
-async function sendMessage(billId) {
+const fs = require("fs");
+const path = require("path");
+const os = require("os");
+
+async function sendBillToCustomer(billId) {
     try {
-        const sock = getClient(); // Baileys client
-        if (!sock) {
-            console.log('❗ WhatsApp client not ready.');
-            return 0;
+        const client = getClient();
+        if (!client) {
+            console.log('❗ WhatsApp client not initialized.');
+            return;
         }
 
         console.log('🔍 Fetching bill with ID:', billId);
         const bill = await Bill.findById(billId);
         if (!bill) {
             console.log('❌ Bill not found');
-            return 0;
+            return;
         }
 
-        const chatId = `91${bill.customerPhone}@s.whatsapp.net`; // Baileys format
+        const phoneNumber = `91${bill.customerPhone}`;
+        const chatId = `${phoneNumber}@c.us`;
         console.log('📱 Sending to:', chatId);
 
         const pdfBuffer = await generateBillCanvas(billId);
         if (!pdfBuffer) {
             console.log('❌ PDF generation failed.');
-            return 0;
+            return;
         }
 
-        console.log('🧾 Sending bill text...');
-        await sock.sendMessage(chatId, { text: '📄 Your bill is ready. Please find the PDF attached.' });
+        // Write PDF buffer to a temporary file
+        const tempFilePath = path.join(os.tmpdir(), `bill-${bill.billNo || 'invoice'}.pdf`);
+        fs.writeFileSync(tempFilePath, pdfBuffer);
 
-        console.log('📎 Uploading PDF...');
-        await sock.sendMessage(chatId, {
-            document: pdfBuffer,
-            mimetype: 'application/pdf',
-            fileName: `bill-${bill.billNo || 'invoice'}.pdf`
-        });
+        // Send a text message
+        console.log('🧾 Sending message...');
+        await client.sendMessage(chatId, `Hello ${bill.customerName},\n\n📄 Your bill (No: ${bill.billNo}) is ready.\nPlease find the PDF attached.`);
 
-        console.log('✅ Message and PDF sent to WhatsApp');
-        return 1;
+        // Send the PDF as a document
+        console.log('📎 Sending PDF...');
+        const media = MessageMedia.fromFilePath(tempFilePath);
+        await client.sendMessage(chatId, media, { caption: '🧾 Please check your bill PDF' });
 
-    } catch (err) {
-        console.error('❌ Error in sending WhatsApp message:', err);
-        return 0;
+        // Clean up the temp file
+        fs.unlinkSync(tempFilePath);
+
+        console.log('✅ Bill sent to WhatsApp successfully.');
+    } catch (error) {
+        console.error('❌ Error sending bill:', error);
     }
 }
 
-module.exports = sendMessage;
+module.exports = { sendBillToCustomer };

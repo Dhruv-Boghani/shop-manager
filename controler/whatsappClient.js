@@ -1,93 +1,62 @@
-const { MongoClient } = require("mongodb");
-const makeWASocket = require("@whiskeysockets/baileys").default;
-const qrcode = require("qrcode");
-const { default: pino } = require("pino");
-const mongoose = require("mongoose");
+const { Client, LocalAuth } = require('whatsapp-web.js');
+const qrcode = require('qrcode-terminal');
+const mongoose = require('mongoose');
 
-let sock;
+// --- Session Schema inside the same file ---
+const sessionSchema = new mongoose.Schema({
+  _id: { type: String, default: "default" },
+  session: Object
+});
+const Session = mongoose.model("Session", sessionSchema);
 
-// MongoDB session loading
-async function loadSession() {
-    try {
-        const session = await mongoose.connection.db.collection('sessions').findOne({ _id: 'default' });
-        return session ? session.session : null;
-    } catch (error) {
-        console.error("Error loading session from MongoDB:", error);
-        return null;
-    }
+let client;
+
+// --- Initialize WhatsApp Web.js ---
+async function initWhatsApp() {
+  try {
+    // Check if session exists in MongoDB
+    const existingSession = await Session.findById("default");
+
+    client = new Client({
+      authStrategy: new LocalAuth(), // Uses local storage for sessions
+      puppeteer: {
+        headless: true,
+        args: ['--no-sandbox', '--disable-setuid-sandbox']
+      }
+    });
+
+    // Show QR in terminal if no session
+    client.on('qr', (qr) => {
+      console.log('📲 Scan this QR code to log in:');
+      qrcode.generate(qr, { small: true });
+    });
+
+    // WhatsApp ready
+    client.on('ready', async () => {
+      console.log('✅ WhatsApp client is ready');
+
+      // Save auth state to MongoDB
+      const sessionData = client.authStrategy.getState();
+      await Session.findByIdAndUpdate("default", { session: sessionData }, { upsert: true });
+    });
+
+    // Auth failure or disconnected
+    client.on('auth_failure', () => console.log('❌ Authentication failure'));
+    client.on('disconnected', () => console.log('🔌 WhatsApp client disconnected'));
+
+    await client.initialize();
+
+  } catch (err) {
+    console.error('❌ Error starting WhatsApp client:', err);
+  }
 }
 
-// MongoDB session saving
-async function saveSession(session) {
-    try {
-        await mongoose.connection.db.collection('sessions').updateOne(
-            { _id: 'default' },
-            { $set: { session } },
-            { upsert: true }
-        );
-    } catch (error) {
-        console.error("Error saving session to MongoDB:", error);
-    }
+// --- Getter ---
+function getClient() {
+  return client;
 }
-
-async function connectToWhatsApp() {
-    try {
-        // Load session from MongoDB or use null if not found
-        const sessionData = await loadSession();
-        if (sessionData) {
-            console.log('Session loaded successfully.');
-        } else {
-            console.log('Session not found. Scanning QR...');
-        }
-
-        // Create the socket connection using the session
-        sock = makeWASocket({
-            printQRInTerminal: false, // Show QR code in terminal using qrcode
-            logger: pino({ level: "silent" }), // Logging setup (silent to suppress logs)
-            auth: sessionData || {}, // Use session for authentication (or empty object if no session)
-        });
-
-        // Event: Connection update (handles QR code and connection status)
-        sock.ev.on("connection.update", async (update) => {
-            const { connection, qr } = update;
-
-            if (qr) {
-                console.log("📲 Scan this QR code to login:");
-                qrcode.toString(qr, { type: "terminal" }, (err, url) => {
-                    if (err) {
-                        console.error('❌ Error generating QR code:', err);
-                        return;
-                    }
-                    console.log(url); // Show QR code in terminal
-                });
-            }
-
-            if (connection === "open") {
-                console.log("✅ WhatsApp is connected");
-                await saveSession(sock.authState); // Save session after successful connection
-            }
-
-            if (connection === "close") {
-                const statusCode = update.lastDisconnect?.error?.output?.statusCode;
-                const shouldReconnect = statusCode !== 401; // Do not reconnect on unauthorized
-                console.log("❌ Connection closed. Reconnecting:", shouldReconnect);
-                if (shouldReconnect) {
-                    await connectToWhatsApp(); // Reconnect if necessary
-                }
-            }
-        });
-
-        // Event: Credentials update (save the new creds to MongoDB)
-        sock.ev.on("creds.update", saveSession);
-
-    } catch (error) {
-        console.error('❌ Error in WhatsApp connection:', error);
-    }
-}
-
-// Initialize connection
-connectToWhatsApp();
 
 module.exports = {
-    getClient: () => sock, // Export socket instance for use in other parts
+  initWhatsApp,
+  getClient
 };
