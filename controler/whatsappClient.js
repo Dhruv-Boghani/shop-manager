@@ -44,6 +44,7 @@ async function initializeClient() {
 
   client.on('authenticated', async (session) => {
     console.log('🔒 Authenticated successfully');
+    console.log('📦 Session Data:', session);
     await Session.findByIdAndUpdate(
       'default',
       { session },
