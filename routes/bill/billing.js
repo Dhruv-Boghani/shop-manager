@@ -59,7 +59,7 @@ router.post("/", validateBill, async (req, res) => {
       });
     }
   }
-  
+
   const getNextCount = async () => {
     // Always find and update the single counter document
     let counter = await Counter.findOneAndUpdate(
@@ -67,19 +67,19 @@ router.post("/", validateBill, async (req, res) => {
       { $inc: { value: 1 } },
       { new: true, upsert: true } // Create if not exists
     );
-  
+
     // Reset if over 999
     if (counter.value >= 1000) {
       counter.value = 0;
       await counter.save();
     }
-  
+
     return counter.value;
   };
-  
+
   // Usage
   const billno = await getNextCount();
-  
+
   // product array
   const products = [];
 
@@ -145,8 +145,8 @@ router.post("/", validateBill, async (req, res) => {
   }
 
   if (mobileNo) {
-    whatsappController(savebill._id);
-}
+    whatsappController.sendBillToCustomer(savebill._id);
+  }
 
   req.body.shopId = shopId;
   res.redirect(`/billing/abill?id=${savebill._id}`);
