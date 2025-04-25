@@ -1,62 +1,75 @@
+// whatsappClient.js
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 const mongoose = require('mongoose');
 
-// --- Session Schema inside the same file ---
 const sessionSchema = new mongoose.Schema({
-  _id: { type: String, default: "default" },
-  session: Object
-});
-const Session = mongoose.model("Session", sessionSchema);
+    _id: { type: String, default: 'default' },
+    session: Object
+}, { collection: 'sessions' });
+
+const Session = mongoose.model('Session', sessionSchema); // adjust path if needed
 
 let client;
 
-// --- Initialize WhatsApp Web.js ---
-async function initWhatsApp() {
-  try {
-    // Check if session exists in MongoDB
-    const existingSession = await Session.findById("default");
+async function initializeClient() {
+  const saved = await Session.findById('default');
+  let clientOptions;
 
-    client = new Client({
-      authStrategy: new LocalAuth(), // Uses local storage for sessions
-      puppeteer: {
-        headless: true,
-        args: ['--no-sandbox', '--disable-setuid-sandbox']
-      }
-    });
-
-    // Show QR in terminal if no session
-    client.on('qr', (qr) => {
-      console.log('📲 Scan this QR code to log in:');
-      qrcode.generate(qr, { small: true });
-    });
-
-    // WhatsApp ready
-    client.on('ready', async () => {
-      console.log('✅ WhatsApp client is ready');
-
-      // Save auth state to MongoDB
-      const sessionData = client.authStrategy.getState();
-      await Session.findByIdAndUpdate("default", { session: sessionData }, { upsert: true });
-    });
-
-    // Auth failure or disconnected
-    client.on('auth_failure', () => console.log('❌ Authentication failure'));
-    client.on('disconnected', () => console.log('🔌 WhatsApp client disconnected'));
-
-    await client.initialize();
-
-  } catch (err) {
-    console.error('❌ Error starting WhatsApp client:', err);
+  if (saved && saved.session) {
+    clientOptions = {
+      session: saved.session
+    };
+  } else {
+    console.log("📲 No session found, please scan the QR code.");
   }
+
+  client = new Client({
+    authStrategy: new LocalAuth(),
+    puppeteer: {
+      headless: true,
+      args: ['--no-sandbox']
+    },
+    ...clientOptions
+  });
+
+  client.on('qr', qr => {
+    console.log("📲 Scan this QR code:");
+    qrcode.generate(qr, { small: true });
+  });
+
+  client.on('ready', () => {
+    console.log('✅ WhatsApp client is ready');
+  });
+
+  client.on('authenticated', async (session) => {
+    console.log('🔒 Authenticated successfully');
+    await Session.findByIdAndUpdate(
+      'default',
+      { session },
+      { upsert: true }
+    );
+  });
+
+  client.on('auth_failure', msg => {
+    console.error('❌ Authentication failed', msg);
+  });
+
+  client.on('disconnected', reason => {
+    console.log('❌ Client disconnected', reason);
+  });
+
+  await client.initialize();
 }
 
-// --- Getter ---
 function getClient() {
+  if (!client) {
+    console.log('❗ WhatsApp client not initialized.');
+  }
   return client;
 }
 
 module.exports = {
-  initWhatsApp,
+  initializeClient,
   getClient
 };
