@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 // Set session folder path to Render's persistent disk or custom path.
-const sessionPath = path.join('/persistent', 'session');
+const sessionPath = path.join(__dirname, '../persistent/session');
 let sock = null; // global socket instance
 
 // Helper to clear session folder (if needed)
