@@ -6,7 +6,7 @@ const Shop = require("../../model/Shop");
 const Counter = require("../../model/Counter")
 const { body, validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
-const whatsappController = require("../../controler/whatsapp")
+const { sendBillToCustomer } = require('../../controler/whatsapp');
 
 const router = express.Router();
 const jwtSecrate = "DhruvBoghani624@#";
@@ -145,7 +145,7 @@ router.post("/", validateBill, async (req, res) => {
   }
 
   if (mobileNo) {
-    whatsappController.sendBillToCustomer(savebill._id);
+    sendBillToCustomer(savebill._id);
   }
 
   req.body.shopId = shopId;

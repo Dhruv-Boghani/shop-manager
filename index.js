@@ -6,8 +6,7 @@ const checkAuth = require('./middleware/auth');
 const cookieParser = require('cookie-parser');
 const expressLayouts = require('express-ejs-layouts');
 require('dotenv').config();
-const { initializeClient } = require('./controler/whatsappClient');
-
+const { connectToWhatsApp } = require('./controler/whatsappClient');
 
 const corsConfig = {
   origin: "*",
@@ -68,7 +67,7 @@ app.use('/assign', require('./routes/shop/assign'));
 mongoose.connect(MONGO_URI)
   .then(() => {
     console.log('MongoDB connected');
-    initializeClient();
+    connectToWhatsApp(); // call this at startup
   })
   .catch(err => console.error('MongoDB connection error:', err));
 

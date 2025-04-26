@@ -1,76 +1,67 @@
-// whatsappClient.js
-const { Client, LocalAuth } = require('whatsapp-web.js');
-const qrcode = require('qrcode-terminal');
-const mongoose = require('mongoose');
+const { useMultiFileAuthState, makeWASocket, DisconnectReason } = require('@whiskeysockets/baileys');
+const fs = require('fs');
+const path = require('path');
 
-const sessionSchema = new mongoose.Schema({
-    _id: { type: String, default: 'default' },
-    session: Object
-}, { collection: 'sessions' });
+// Set session folder path to Render's persistent disk or custom path.
+const sessionPath = path.join(__dirname, 'session'); // assuming this is a persistent directory
+let sock = null; // global socket instance
 
-const Session = mongoose.model('Session', sessionSchema); // adjust path if needed
-
-let client;
-
-async function initializeClient() {
-  const saved = await Session.findById('default');
-  let clientOptions;
-
-  if (saved && saved.session) {
-    clientOptions = {
-      session: saved.session
-    };
-  } else {
-    console.log("📲 No session found, please scan the QR code.");
-  }
-
-  client = new Client({
-    authStrategy: new LocalAuth(),
-    puppeteer: {
-      headless: true,
-      args: ['--no-sandbox']
-    },
-    ...clientOptions
-  });
-
-  client.on('qr', qr => {
-    console.log("📲 Scan this QR code:");
-    qrcode.generate(qr, { small: true });
-  });
-
-  client.on('ready', () => {
-    console.log('✅ WhatsApp client is ready');
-  });
-
-  client.on('authenticated', async (session) => {
-    console.log('🔒 Authenticated successfully');
-    console.log('📦 Session Data:', session);
-    await Session.findByIdAndUpdate(
-      'default',
-      { session },
-      { upsert: true }
-    );
-  });
-
-  client.on('auth_failure', msg => {
-    console.error('❌ Authentication failed', msg);
-  });
-
-  client.on('disconnected', reason => {
-    console.log('❌ Client disconnected', reason);
-  });
-
-  await client.initialize();
+// Helper to clear session folder (if needed)
+function clearSessionFolder() {
+    if (fs.existsSync(sessionPath)) {
+        fs.readdirSync(sessionPath).forEach(file => {
+            const filePath = path.join(sessionPath, file);
+            if (fs.lstatSync(filePath).isFile()) {
+                fs.unlinkSync(filePath);
+            }
+        });
+        console.log('🧹 Old session files cleared.');
+    }
 }
 
-function getClient() {
-  if (!client) {
-    console.log('❗ WhatsApp client not initialized.');
-  }
-  return client;
+// Main connect function
+async function connectToWhatsApp() {
+    // If you want, you can clear session folder before connecting, or not.
+    // clearSessionFolder(); // optional: clear previous session
+
+    const { state, saveCreds } = await useMultiFileAuthState(sessionPath);
+
+    sock = makeWASocket({
+        auth: state,
+        printQRInTerminal: true,
+    });
+
+    sock.ev.on('creds.update', saveCreds);
+
+    sock.ev.on('connection.update', async (update) => {
+        const { connection, lastDisconnect } = update;
+        console.log(`Connection status: ${connection}`);
+
+        if (connection === 'close') {
+            const shouldReconnect = lastDisconnect?.error?.output?.statusCode !== DisconnectReason.loggedOut;
+            if (shouldReconnect) {
+                console.log('Reconnecting to WhatsApp...');
+                await connectToWhatsApp();
+            } else {
+                console.log('Session closed. Please scan QR code again.');
+                sock = null;
+            }
+        }
+
+        if (connection === 'open') {
+            console.log('✅ WhatsApp connected successfully!');
+        }
+    });
+
+    return sock;
 }
 
-module.exports = {
-  initializeClient,
-  getClient
-};
+async function getClient() {
+    if (!sock) {
+        console.log('🔄 Initializing WhatsApp client...');
+        await connectToWhatsApp();
+    }
+    return sock;
+}
+
+module.exports = { connectToWhatsApp, getClient };
