@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: nodejs-service
+    env: node
+    buildCommand: 'cd nodejs-server && npm install'
+    startCommand: 'cd nodejs-server && npm start'
+    plan: free
+    branches: 
+      - main
+    routes:
+      - "/": index.js
+
+  - type: web
+    name: python-service
+    env: python
+    buildCommand: 'pip install -r requirements.txt'
+    startCommand: 'python python-scripts/script.py'
+    plan: free
+    branches: 
+      - main
