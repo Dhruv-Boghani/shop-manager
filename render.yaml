@@ -1,20 +1,22 @@
 services:
+  # Node.js Service
   - type: web
-    name: nodejs-service
+    name: nodejs-server
     env: node
-    buildCommand: 'cd nodejs-server && npm install'
-    startCommand: 'cd nodejs-server && npm start'
+    buildCommand: 'npm install'
+    startCommand: 'npm start'
     plan: free
     branches: 
       - main
     routes:
-      - "/": index.js
-
+      - "/": index.js  # Replace with your Node.js entry point
+  
+  # Python Service
   - type: web
     name: python-service
     env: python
-    buildCommand: 'pip install -r requirements.txt'
-    startCommand: 'python python-scripts/script.py'
+    buildCommand: 'pip install -r requirements.txt'  # Install Python dependencies
+    startCommand: 'python3 controller/script.py'    # Run your Python script
     plan: free
     branches: 
       - main
