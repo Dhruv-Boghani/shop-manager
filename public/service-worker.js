@@ -8,7 +8,7 @@ self.addEventListener('install', e => {
           '/icons/icon-192.png',
           '/icons/icon-512.png',
           '/icons/favicon.ico',
-          '/icons/logo.png',
+          '/image/logo.png',
           '/sound/beep.pm3',
           '/tags',
           '/qrcodes',
