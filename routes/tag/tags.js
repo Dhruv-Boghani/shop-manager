@@ -51,7 +51,7 @@ router.get('/', async (req, res) => {
       const shop = await Shop.findOne({ manager: new mongoose.Types.ObjectId(user._id) });
       const tags = await Tag.find({ shop: new mongoose.Types.ObjectId(shop._id) }).sort({ createdAt: -1 });
 
-      return res.render('pages/tags', { tags });
+      return res.render('pages/tags', { tags, shopName: null });
     }
 
     const tags = await Tag.find().sort({ createdAt: -1 }).populate('shop', 'name'); // populate only 'name' from shop
