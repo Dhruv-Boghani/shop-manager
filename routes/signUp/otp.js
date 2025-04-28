@@ -7,57 +7,75 @@ const jwtSecrate = "DhruvBoghani624@#";
 
 router.get('/', async (req, res) => {
     try {
-      const email = req.query.email;
-      const otp = req.cookies.otp;
-  
-      if (!email || !otp) {
-        return res.render('./pages/otp', { error: 'Invalid or expired OTP link', email: '', role: '' });
-      }
-  
-      const otpObject = jwt.verify(otp, jwtSecrate);
-      const user = await User.findOne({ email });
-  
-      if (!user) {
-        return res.render('./pages/otp', { error: 'User not found', email: '', role: '' });
-      }
-  
-      res.render('./pages/otp', { error: null, email, role: user.role });
-  
+        const email = req.query.email;
+        const otp = req.cookies.otp;
+
+        if (!email || !otp) {
+            return res.render('./pages/otp', { error: 'Invalid or expired OTP link', email: '', role: '' });
+        }
+
+        const otpObject = jwt.verify(otp, jwtSecrate);
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            return res.render('./pages/otp', { error: 'User not found', email: '', role: '' });
+        }
+
+        res.render('./pages/otp', { error: null, email, role: user.role });
+
     } catch (err) {
-      console.log(err);
-      res.render('./pages/otp', { error: 'Something went wrong', email: '', role: '' });
+        console.log(err);
+        res.render('./pages/otp', { error: 'Something went wrong', email: '', role: '' });
     }
-  });
-  
+});
+
 
 router.post('/', async (req, res) => {
     try {
         const email = req.query.email;
         if (!email) {
-            return res.status(400).json({ msg: 'you change the URL please try again' });
+            return res.render('pages/error', {
+                message: 'you change the URL please try again',
+                error: null
+            });
         }
 
         const otp = req.cookies.otp; // Get the OTP from the cookie
         if (!otp) {
-            return res.status(400).json({ msg: 'OTP expired or not found' });
+            return res.render('pages/error', {
+                message: 'OTP expired or not found',
+                error: null
+            });
         }
 
         const otpObject = jwt.verify(otp, jwtSecrate); // Verify the OTP using the secret key
         const user = await User.findOne({ email });
         if (!user) {
-            return res.status(400).json({ msg: 'User not found' });
+            return res.render('pages/error', {
+                message: 'User not found',
+                error: null
+            });
         }
 
         if (user.role === 'manager' || user.role === 'seller') {
             const { otp, adminotp } = req.body;
             if (!adminotp) {
-                return res.status(400).json({ msg: 'Admin OTP not provided' });
+                return res.render('pages/error', {
+                    message: 'Admin OTP not provided',
+                    error: null
+                });
             }
             if (adminotp !== otpObject.adminotp) {
-                return res.status(400).json({ msg: 'Invalid Admin OTP' });
+                return res.render('pages/error', {
+                    message: 'Invalid Admin OTP',
+                    error: null
+                });
             }
             if (otp !== otpObject.otp) {
-                return res.status(400).json({ msg: 'Invalid OTP' });
+                return res.render('pages/error', {
+                    message: 'Invalid OTP',
+                    error: null
+                });
             }
             user.isVerified = true;
             await user.save();
@@ -67,10 +85,16 @@ router.post('/', async (req, res) => {
         else if (user.role === 'user') {
             const { otp } = req.body;
             if (!otp) {
-                return res.status(400).json({ msg: 'OTP not provided' });
+                return res.render('pages/error', {
+                    message: 'OTP not provided',
+                    error: null
+                });
             }
             if (otp !== otpObject.otp) {
-                return res.status(400).json({ msg: 'Invalid OTP' });
+                return res.render('pages/error', {
+                    message: 'Invalid OTP',
+                    error: null
+                });
             }
             user.isVerified = true;
             await user.save();
@@ -80,7 +104,10 @@ router.post('/', async (req, res) => {
 
         }
         else {
-            return res.status(400).json({ msg: 'Invalid role' });
+            return res.render('pages/error', {
+                message: 'Invalid role',
+                error: null
+            });
         }
         // If the OTP is valid, mark the user as verified
 
