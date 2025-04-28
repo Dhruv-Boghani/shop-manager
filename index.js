@@ -64,10 +64,10 @@ app.use('/assign', require('./routes/shop/assign'));
 
 
 //connection
+connectToWhatsApp(); // call this at startup
 mongoose.connect(MONGO_URI)
   .then(() => {
     console.log('MongoDB connected');
-    connectToWhatsApp(); // call this at startup
   })
   .catch(err => console.error('MongoDB connection error:', err));
 

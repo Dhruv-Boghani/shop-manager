@@ -36,6 +36,21 @@
     padding: 0;
   }
   
+  .navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* space between logo and text */
+    font-weight: bold;
+    font-size: 20px;
+    color: white;
+    text-decoration: none;
+  }
+  
+  .navbar-brand img {
+    height: 30px; /* adjust logo size */
+    width: auto;
+  }
+  
   .navbar-links li a {
     color: white;
     text-decoration: none;
@@ -49,6 +64,7 @@
     background-color: #444;
     border-radius: 5px;
   }
+  
   
   /* Dropdown */
   .dropdown {
