@@ -213,10 +213,9 @@ router.post('/generate', validateTag, async (req, res) => {
 
   } catch (err) {
     console.error('Error generating tags:', err);
-    res.status(500).render('./pages/tag-generator', {
-      products: await Product.find({}, '_id name'),
-      shops: await Shop.find({}, '_id name'),
-      errors: [{ msg: '❌ Error generating tags. Please try again.' }],
+    res.status(500).render('./pages/error', {
+      message: 'First, add the product to the shop, and then generate the tags.',
+      error: err,
     });
   }
 });
