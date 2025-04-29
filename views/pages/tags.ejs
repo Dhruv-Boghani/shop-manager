@@ -6,10 +6,12 @@
   <title>Tags - MyShop</title>
   <link href="/css/tags.css" rel="stylesheet">
   <link href="/css/navbar.css" rel="stylesheet">
+  <link href="/css/popup.css" rel="stylesheet">
 </head>
 <body>
 
 <%- include('../partials/navbar') %>
+<%- include('../partials/popupTag') %>
 
 <div class="tag-container">
   <h2 class="page-title">Tag List</h2>
@@ -37,9 +39,9 @@
             <td><%= tag.itemName %></td>
             <td><%= tag.price %></td>
             <td>
-              <form action="/tags/delete/<%= tag._id %>" method="POST" onsubmit="return confirm('Are you sure to delete this tag?');">
-                <button class="delete-btn" type="submit">Delete</button>
-              </form>
+              <form id="deleteForm-<%= tag._id %>" action="/tags/delete/<%= tag._id %>" method="POST" onsubmit="return false;">
+                <button type="button" class="delete-btn no-loader" onclick="openDeleteModal('<%= tag._id %>')">Delete</button>
+              </form>              
             </td>
           </tr>
         <% }) %>
@@ -83,7 +85,24 @@
       `;
     });
   });
-</script>
 
+  let currentDeleteFormId = null;
+  
+  function openDeleteModal(billId) {
+    currentDeleteFormId = `deleteForm-${billId}`;
+    document.getElementById('deleteModal').style.display = 'block';
+  }
+  
+  function closeDeleteModal() {
+    document.getElementById('deleteModal').style.display = 'none';
+    currentDeleteFormId = null;
+  }
+  
+  document.getElementById('confirmDeleteBtn').addEventListener('click', () => {
+    if (currentDeleteFormId) {
+      document.getElementById(currentDeleteFormId).submit();
+    }
+  });
+  </script>
 </body>
 </html>

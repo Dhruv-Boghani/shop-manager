@@ -1,0 +1,19 @@
+<!-- popup.ejs -->
+
+<div id="deleteModal" class="custom-modal">
+  <div class="custom-modal-dialog">
+    <div class="custom-modal-content">
+      <div class="custom-modal-header">
+        <h5 class="custom-modal-title">Confirm Delete</h5>
+        <button class="custom-close no-loader" onclick="closeDeleteModal()">&times;</button>
+      </div>
+      <div class="custom-modal-body">
+        Are you sure you want to delete this bill?
+      </div>
+      <div class="custom-modal-footer">
+        <button class="btn btn-secondary no-loader" onclick="closeDeleteModal()">Cancel</button>
+        <button class="btn btn-primary" id="confirmDeleteBtn">Yes, Delete</button>
+      </div>
+    </div>
+  </div>
+</div>

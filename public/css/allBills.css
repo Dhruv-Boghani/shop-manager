@@ -91,12 +91,12 @@ body {
   background-color: #e0a800;
 }
 
-.danger {
+.danger1 {
   background-color: #dc3545;
   color: white;
 }
 
-.danger:hover {
+.danger1:hover {
   background-color: #c82333;
 }
 

@@ -15,6 +15,7 @@ self.addEventListener('install', e => {
           '/bills',
           '/barcodes',
           '/css/abill.css',
+          '/css/popup.css',
           '/css/add-shop.css',
           '/css/allBills.css',
           '/css/assign-user.css',

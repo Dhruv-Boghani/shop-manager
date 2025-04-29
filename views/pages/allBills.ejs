@@ -8,10 +8,12 @@
   <!-- <link rel="stylesheet" href="/css/style.css"> -->
   <link rel="stylesheet" href="/css/navbar.css">
   <link rel="stylesheet" href="/css/allBills.css"> <!-- Page-specific CSS -->
+  <link rel="stylesheet" href="/css/popup.css"> <!-- Page-specific CSS -->
 </head>
 
 <body>
   <%- include('../partials/navbar') %>
+  <%- include('../partials/popupBill') %>
 
     <div class="container">
       <h2 class="page-title">All Bills</h2>
@@ -49,10 +51,10 @@
                   <a href="/allbill/edit/<%= bill._id %>" class="btn warning">Edit</a>
                 </td>
                 <td>
-                  <form action="/allbill/delete/<%= bill._id %>" method="POST"
-                    onsubmit="return confirm('Are you sure?')">
-                    <button class="btn danger" type="submit">Delete</button>
+                  <form id="deleteForm-<%= bill._id %>" action="/allbill/delete/<%= bill._id %>" method="POST" onsubmit="return false;">
+                    <button class="btn danger1 no-loader" type="button" onclick="openDeleteModal('<%= bill._id %>')">Delete</button>
                   </form>
+                  
                 </td>
               </tr>
               <% }); %>
@@ -60,6 +62,27 @@
         </table>
       </div>
     </div>
+
+    <script>
+      let currentDeleteFormId = null;
+      
+      function openDeleteModal(billId) {
+        currentDeleteFormId = `deleteForm-${billId}`;
+        document.getElementById('deleteModal').style.display = 'block';
+      }
+      
+      function closeDeleteModal() {
+        document.getElementById('deleteModal').style.display = 'none';
+        currentDeleteFormId = null;
+      }
+      
+      document.getElementById('confirmDeleteBtn').addEventListener('click', () => {
+        if (currentDeleteFormId) {
+          document.getElementById(currentDeleteFormId).submit();
+        }
+      });
+      </script>
+      
 </body>
 
 </html>

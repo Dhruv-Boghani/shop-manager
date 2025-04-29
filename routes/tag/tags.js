@@ -47,6 +47,10 @@ router.get('/', async (req, res) => {
 
 
     if (tokenData.role === 'manager') {
+      if (!req.cookies.shop) {
+        return res.redirect('/bill'); // 🛑 Add return here to stop further execution
+      }
+
       const user = await User.findOne({ email: tokenData.email });
       const shop = await Shop.findOne({ manager: new mongoose.Types.ObjectId(user._id) });
       const tags = await Tag.find({ shop: new mongoose.Types.ObjectId(shop._id) }).sort({ createdAt: -1 });

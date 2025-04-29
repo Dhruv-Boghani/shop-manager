@@ -6,9 +6,11 @@
   <title>All Shops - MyShop</title>
   <link rel="stylesheet" href="/css/shop-list.css">
   <link rel="stylesheet" href="/css/navbar.css">
+  <link rel="stylesheet" href="/css/popup.css">
 </head>
 <body>
   <%- include('../partials/navbar') %>
+  <%- include('../partials/popupShop') %>
 
   <div class="main-container">
     <h2>All Shops</h2>
@@ -41,9 +43,9 @@
               </td>
               <td class="action-buttons">
                 <a href="/shop/edit/<%= shop._id %>" class="btn warning">Edit</a>
-                <form action="/shop/delete/<%= shop._id %>" method="POST" onsubmit="return confirm('Are you sure you want to delete this shop?');">
-                  <button type="submit" class="btn danger">Delete</button>
-                </form>
+                <form id="deleteForm-<%= shop._id %>" action="/shop/delete/<%= shop._id %>" method="POST" onsubmit="return false;">
+                  <button type="button" class="btn danger no-loader" onclick="openDeleteModal('<%= shop._id %>')">Delete</button>
+                </form>                
               </td>
             </tr>
           <% }) %>
@@ -53,5 +55,24 @@
 
     <a href="/shop/add" class="btn primary add-btn">Add Shop</a>
   </div>
+  <script>
+    let currentDeleteFormId = null;
+    
+    function openDeleteModal(billId) {
+      currentDeleteFormId = `deleteForm-${billId}`;
+      document.getElementById('deleteModal').style.display = 'block';
+    }
+    
+    function closeDeleteModal() {
+      document.getElementById('deleteModal').style.display = 'none';
+      currentDeleteFormId = null;
+    }
+    
+    document.getElementById('confirmDeleteBtn').addEventListener('click', () => {
+      if (currentDeleteFormId) {
+        document.getElementById(currentDeleteFormId).submit();
+      }
+    });
+    </script>
 </body>
 </html>

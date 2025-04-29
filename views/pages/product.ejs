@@ -5,9 +5,11 @@
   <title>All Products - MyShop</title>
   <link rel="stylesheet" href="/css/product.css"> <!-- Link to custom CSS -->
   <link rel="stylesheet" href="/css/navbar.css"> <!-- Link to custom CSS -->
+  <link rel="stylesheet" href="/css/popup.css"> <!-- Link to custom CSS -->
 </head>
 <body>
   <%- include('../partials/navbar') %>
+  <%- include('../partials/popupProduct') %>
 
   <div class="product-container">
     <div class="header">
@@ -44,9 +46,9 @@
                 <td><%= product.description %></td>
                 <td>
                   <a href="/product/edit/<%= product._id %>" class="edit-btn">Edit</a>
-                  <form action="/product/delete/<%= product._id %>" method="POST" class="delete-form">
-                    <button class="delete-btn" onclick="return confirm('Are you sure?')">Delete</button>
-                  </form>
+                  <form id="deleteForm-<%= product._id %>" action="/product/delete/<%= product._id %>" method="POST" onsubmit="return false;" class="delete-form">
+                    <button type="button" class="delete-btn no-loader" onclick="openDeleteModal('<%= product._id %>')">Delete</button>
+                  </form>                  
                 </td>
               </tr>
             <% }) %>
@@ -57,5 +59,25 @@
   </div>
 
   <script src="/js/script.js"></script> <!-- Add custom JS if needed -->
+  <script>
+    let currentDeleteFormId = null;
+    
+    function openDeleteModal(billId) {
+      currentDeleteFormId = `deleteForm-${billId}`;
+      document.getElementById('deleteModal').style.display = 'block';
+    }
+    
+    function closeDeleteModal() {
+      document.getElementById('deleteModal').style.display = 'none';
+      currentDeleteFormId = null;
+    }
+    
+    document.getElementById('confirmDeleteBtn').addEventListener('click', () => {
+      if (currentDeleteFormId) {
+        document.getElementById(currentDeleteFormId).submit();
+      }
+    });
+    </script>
+    
 </body>
 </html>
