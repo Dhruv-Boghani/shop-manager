@@ -63,28 +63,28 @@ async function generateTagImage(dataObj, tagDir) {
 
   // QR Code - larger size (90x90px)
   const qrSize = mmToPx(22);
-  const qrX = mmToPx(0);
-  const qrY = mmToPx(0);
+  const qrX = mmToPx(1.5);
+  const qrY = mmToPx(1.5);
   ctx.drawImage(qrImg, qrX, qrY, qrSize, qrSize);
 
   // Text Position
-  const textX = qrX + qrSize + mmToPx(3.5);
-  let textY = qrY + mmToPx(3.5);
+  const textX = qrX + qrSize + mmToPx(0.5);
+  let textY = qrY + mmToPx(0.5);
 
   // Price in large font
   ctx.fillStyle = 'black';
-  ctx.font = 'bold 34px OpenSans';
+  ctx.font = 'bold 28px OpenSans';
   ctx.fillText(`Price : ${dataObj.price}`, textX, textY + 5);
 
   // Other fields in 14px
-  ctx.font = 'bold 22px OpenSans';
-  textY += 46;
+  ctx.font = 'bold 18px OpenSans';
+  textY += 40;
   ctx.fillText(`Shop : ${dataObj.shopName}`, textX, textY);
-  textY += 34;
+  textY += 28;
   ctx.fillText(`Product : ${dataObj.productName}`, textX, textY);
-  textY += 34;
+  textY += 28;
   ctx.fillText(`${dataObj.id}`, textX, textY);
-  textY += 34;
+  textY += 28;
   ctx.fillText(`Code : ${dataObj.code}`, textX, textY);
 
   // Barcode
