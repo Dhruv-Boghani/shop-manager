@@ -45,51 +45,50 @@ async function fetchDetails(productId, shopId, tagId, qrCode, barcode) {
 }
 
 async function generateTagImage(dataObj, tagDir) {
-  const canvasWidth = 590;
-  const canvasHeight = 295;
-  const padding = 24;
+  const canvasWidth = 543;  // 46mm
+  const canvasHeight = 248; // 21mm
+  const padding = 20;
 
   const canvas = createCanvas(canvasWidth, canvasHeight);
   const ctx = canvas.getContext('2d');
 
-  // Background
+  // White background
   ctx.fillStyle = 'white';
   ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
-  // Load images
+  // Load QR and barcode images
   const [qrImg, barcodeImg] = await Promise.all([
     loadImage(dataObj.qrCode),
     loadImage(dataObj.barcode),
   ]);
 
-  // QR Code (bigger)
-  const qrSize = 130; // increase size
+  // Draw QR Code (larger, 130x130)
+  const qrSize = 130;
   const qrX = padding;
   const qrY = padding;
   ctx.drawImage(qrImg, qrX, qrY, qrSize, qrSize);
 
-  // Text section
+  // Draw Text next to QR
   ctx.fillStyle = 'black';
-  ctx.font = 'bold 13px OpenSans';
+  ctx.font = 'bold 14px OpenSans';
 
-  const textX = qrX + qrSize + 20;
+  const textX = qrX + qrSize + 15;
   let textY = qrY + 5;
 
   ctx.fillText(`Shop: ${dataObj.shopName}`, textX, textY += 20);
   ctx.fillText(`Product: ${dataObj.productName}`, textX, textY += 20);
   ctx.fillText(`ID: ${dataObj.id}`, textX, textY += 20);
   ctx.fillText(`Code: ${dataObj.code}`, textX, textY += 20);
-  ctx.fillText(`Price: ₹${dataObj.price}`, textX, textY += 20);
+  ctx.fillText(`Price: ₹${dataObj.price}`, qrX, qrY + qrSize + 30);
 
-  // Barcode (below text, centered in remaining width)
-  const barcodeWidth = 300;
-  const barcodeHeight = 60;
-  const barcodeX = canvasWidth - barcodeWidth - padding;
-  const barcodeY = canvasHeight - barcodeHeight - padding;
-
+  // Draw Barcode at the bottom (max width)
+  const barcodeWidth = canvasWidth - padding * 2;
+  const barcodeHeight = 50;
+  const barcodeX = padding;
+  const barcodeY = canvasHeight - barcodeHeight - padding / 2;
   ctx.drawImage(barcodeImg, barcodeX, barcodeY, barcodeWidth, barcodeHeight);
 
-  // Save PNG
+  // Save the image
   const tagPath = path.join(tagDir, `${dataObj.id}.png`);
   const out = fs.createWriteStream(tagPath);
   const stream = canvas.createPNGStream();
@@ -191,7 +190,7 @@ router.post('/generate', validateTag, async (req, res) => {
       });
       fs.writeFileSync(barcodeFile, barcodeBuffer);
 
-      const details = await fetchDetails(productId, shopId, tagId, qrFile, barcode);
+      const details = await fetchDetails(productId, shopId, tagId, qrFile, barcodeFile);
       const tagPath = await generateTagImage(details, tagDir);
       tagImagePaths.push(tagPath);
     }
