@@ -69,7 +69,7 @@ async function generateTagImage(dataObj, tagDir) {
 
   // Text Position
   const textX = qrX + qrSize + mmToPx(0.5);
-  let textY = qrY + mmToPx(0.5);
+  let textY = qrY + mmToPx(2.5);
 
   // Price in large font
   ctx.fillStyle = 'black';
@@ -88,11 +88,24 @@ async function generateTagImage(dataObj, tagDir) {
   ctx.fillText(`Code : ${dataObj.code}`, textX, textY);
 
   // Barcode
-  const barcodeWidth = width - 30;
-  const barcodeHeight = 40;
-  const barcodeX = (width - barcodeWidth) / 2;
-  const barcodeY = height - barcodeHeight - 5;
-  //ctx.drawImage(barcodeImg, barcodeX, barcodeY, barcodeWidth, barcodeHeight);
+  // Barcode (dynamic sizing)
+  const maxBarcodeWidth = width - mmToPx(3); // leave 1.5mm on each side
+  const maxBarcodeHeight = mmToPx(4.5); // fits well in bottom space
+
+  let barcodeRatio = barcodeImg.width / barcodeImg.height;
+  let finalBarcodeWidth = maxBarcodeWidth;
+  let finalBarcodeHeight = finalBarcodeWidth / barcodeRatio;
+
+  // If too tall, scale down height instead
+  if (finalBarcodeHeight > maxBarcodeHeight) {
+    finalBarcodeHeight = maxBarcodeHeight;
+    finalBarcodeWidth = finalBarcodeHeight * barcodeRatio;
+  }
+
+  const barcodeX = (canvas.width - finalBarcodeWidth) / 2;
+  const barcodeY = canvas.height - finalBarcodeHeight - mmToPx(1);
+  ctx.drawImage(barcodeImg, barcodeX, barcodeY, finalBarcodeWidth, finalBarcodeHeight);
+
 
   // Save PNG
   const tagPath = path.join(tagDir, `${dataObj.id}.png`);
