@@ -62,9 +62,9 @@ async function generateTagImage(dataObj, tagDir) {
   ]);
 
   // QR Code - larger size (90x90px)
-  const qrSize = mmToPx(25);
-  const qrX = mmToPx(-1.5);
-  const qrY = mmToPx(-1.5);
+  const qrSize = mmToPx(22);
+  const qrX = mmToPx(0);
+  const qrY = mmToPx(0);
   ctx.drawImage(qrImg, qrX, qrY, qrSize, qrSize);
 
   // Text Position
@@ -92,7 +92,7 @@ async function generateTagImage(dataObj, tagDir) {
   const barcodeHeight = 40;
   const barcodeX = (width - barcodeWidth) / 2;
   const barcodeY = height - barcodeHeight - 5;
-  ctx.drawImage(barcodeImg, barcodeX, barcodeY, barcodeWidth, barcodeHeight);
+  //ctx.drawImage(barcodeImg, barcodeX, barcodeY, barcodeWidth, barcodeHeight);
 
   // Save PNG
   const tagPath = path.join(tagDir, `${dataObj.id}.png`);
