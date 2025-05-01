@@ -92,8 +92,8 @@ async function generateTagImage(dataObj, tagDir) {
   ctx.drawImage(qrImg, qrX, qrY, qrSize, qrSize);
 
   // Text block position
-  const textX = qrX + qrSize + mmToPx(1);
-  let textY = qrY + mmToPx(2.5);
+  const textX = qrX + qrSize + mmToPx(0.5);
+  let textY = qrY + mmToPx(3);
 
   // Price (big text)
   ctx.fillStyle = 'black';
@@ -123,8 +123,8 @@ async function generateTagImage(dataObj, tagDir) {
     finalBarcodeWidth = finalBarcodeHeight * barcodeRatio;
   }
 
-  const barcodeX = canvas.width - (2*margin) - qrSize;
-  const barcodeY = canvas.height - finalBarcodeHeight - margin - 10;
+  const barcodeX = canvas.width - (2*margin) - qrSize + 10;
+  const barcodeY = canvas.height - finalBarcodeHeight - margin - 15;
   ctx.drawImage(barcodeImg, barcodeX, barcodeY, finalBarcodeWidth, finalBarcodeHeight);
 
   // Save PNG
