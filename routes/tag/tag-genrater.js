@@ -47,48 +47,50 @@ async function fetchDetails(productId, shopId, tagId, qrCode, barcode) {
 async function generateTagImage(dataObj, tagDir) {
   const canvasWidth = 543;  // 46mm
   const canvasHeight = 248; // 21mm
-  const padding = 20;
-
   const canvas = createCanvas(canvasWidth, canvasHeight);
   const ctx = canvas.getContext('2d');
+  const padding = 20;
 
   // White background
   ctx.fillStyle = 'white';
   ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
-  // Load QR and barcode images
+  // Load images
   const [qrImg, barcodeImg] = await Promise.all([
     loadImage(dataObj.qrCode),
     loadImage(dataObj.barcode),
   ]);
 
-  // Draw QR Code (larger, 130x130)
+  // QR Code (size: 130x130)
   const qrSize = 130;
   const qrX = padding;
   const qrY = padding;
   ctx.drawImage(qrImg, qrX, qrY, qrSize, qrSize);
 
-  // Draw Text next to QR
-  ctx.fillStyle = 'black';
-  ctx.font = 'bold 14px OpenSans';
-
+  // Text section
   const textX = qrX + qrSize + 15;
-  let textY = qrY + 5;
+  let textY = qrY + 10;
 
-  ctx.fillText(`Shop: ${dataObj.shopName}`, textX, textY += 20);
-  ctx.fillText(`Product: ${dataObj.productName}`, textX, textY += 20);
-  ctx.fillText(`ID: ${dataObj.id}`, textX, textY += 20);
-  ctx.fillText(`Code: ${dataObj.code}`, textX, textY += 20);
-  ctx.fillText(`Price: ₹${dataObj.price}`, qrX, qrY + qrSize + 30);
+  // Large Price
+  ctx.fillStyle = 'black';
+  ctx.font = 'bold 22px OpenSans';
+  ctx.fillText(`Price : ${dataObj.price}`, textX, textY);
+  
+  // Other text
+  ctx.font = 'bold 16px OpenSans';
+  ctx.fillText(`Shop : ${dataObj.shopName}`, textX, textY += 30);
+  ctx.fillText(`Product : ${dataObj.productName}`, textX, textY += 25);
+  ctx.fillText(`ID : ${dataObj.id}`, textX, textY += 25);
+  ctx.fillText(`Code : ${dataObj.code}`, textX, textY += 25);
 
-  // Draw Barcode at the bottom (max width)
-  const barcodeWidth = canvasWidth - padding * 2;
+  // Barcode (centered at bottom)
+  const barcodeWidth = 306;
   const barcodeHeight = 50;
-  const barcodeX = padding;
-  const barcodeY = canvasHeight - barcodeHeight - padding / 2;
+  const barcodeX = (canvasWidth - barcodeWidth) / 2;
+  const barcodeY = canvasHeight - barcodeHeight - 20;
   ctx.drawImage(barcodeImg, barcodeX, barcodeY, barcodeWidth, barcodeHeight);
 
-  // Save the image
+  // Save image
   const tagPath = path.join(tagDir, `${dataObj.id}.png`);
   const out = fs.createWriteStream(tagPath);
   const stream = canvas.createPNGStream();
