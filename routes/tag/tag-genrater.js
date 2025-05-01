@@ -28,7 +28,7 @@ const validateTag = [
   body('no').isInt({ min: 1 }).withMessage('`no` must be at least 1'),
 ];
 
-async function fetchDetails(productId, shopId, tagId, qrCode, barcode = null) {
+async function fetchDetails(productId, shopId, tagId, qrCode, barcode) {
   const product = await Product.findById(productId);
   const shop = await Shop.findById(shopId);
   if (!product || !shop) throw new Error('Invalid Product or Shop');
@@ -45,44 +45,51 @@ async function fetchDetails(productId, shopId, tagId, qrCode, barcode = null) {
 }
 
 async function generateTagImage(dataObj, tagDir) {
-  // Full sticker size: 50×25 mm → 590×295 px
   const canvasWidth = 590;
   const canvasHeight = 295;
-  const padding = 24; // 2 mm ≈ 24 px
-
-  const contentWidth = canvasWidth - 2 * padding;  // 543 px
-  const contentHeight = canvasHeight - 2 * padding; // 247 px
+  const padding = 24;
 
   const canvas = createCanvas(canvasWidth, canvasHeight);
   const ctx = canvas.getContext('2d');
 
-  // White background
+  // Background
   ctx.fillStyle = 'white';
   ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
-  // Load QR (barcode removed)
-  const qrImg = await loadImage(dataObj.qrCode);
+  // Load images
+  const [qrImg, barcodeImg] = await Promise.all([
+    loadImage(dataObj.qrCode),
+    loadImage(dataObj.barcode),
+  ]);
 
-  // Draw larger QR on left
-  const qrSize = 130;  // fit well in left part
+  // QR Code (bigger)
+  const qrSize = 130; // increase size
   const qrX = padding;
   const qrY = padding;
   ctx.drawImage(qrImg, qrX, qrY, qrSize, qrSize);
 
-  // Text font and position
+  // Text section
   ctx.fillStyle = 'black';
-  ctx.font = 'bold 13px OpenSans'; // smaller font for tight space
+  ctx.font = 'bold 13px OpenSans';
 
-  const textStartX = qrX + qrSize + 20; // right of QR
-  let textY = qrY + 10;
+  const textX = qrX + qrSize + 20;
+  let textY = qrY + 5;
 
-  ctx.fillText(`Shop: ${dataObj.shopName}`, textStartX, textY += 20);
-  ctx.fillText(`Product: ${dataObj.productName}`, textStartX, textY += 25);
-  ctx.fillText(`ID: ${dataObj.id}`, textStartX, textY += 25);
-  ctx.fillText(`Code: ${dataObj.code}`, textStartX, textY += 25);
-  ctx.fillText(`Price: ₹${dataObj.price}`, qrX, qrY + qrSize + 25); // below QR
+  ctx.fillText(`Shop: ${dataObj.shopName}`, textX, textY += 20);
+  ctx.fillText(`Product: ${dataObj.productName}`, textX, textY += 20);
+  ctx.fillText(`ID: ${dataObj.id}`, textX, textY += 20);
+  ctx.fillText(`Code: ${dataObj.code}`, textX, textY += 20);
+  ctx.fillText(`Price: ₹${dataObj.price}`, textX, textY += 20);
 
-  // Save image
+  // Barcode (below text, centered in remaining width)
+  const barcodeWidth = 300;
+  const barcodeHeight = 60;
+  const barcodeX = canvasWidth - barcodeWidth - padding;
+  const barcodeY = canvasHeight - barcodeHeight - padding;
+
+  ctx.drawImage(barcodeImg, barcodeX, barcodeY, barcodeWidth, barcodeHeight);
+
+  // Save PNG
   const tagPath = path.join(tagDir, `${dataObj.id}.png`);
   const out = fs.createWriteStream(tagPath);
   const stream = canvas.createPNGStream();
@@ -91,6 +98,7 @@ async function generateTagImage(dataObj, tagDir) {
   return new Promise((resolve, reject) => {
     out.on('finish', () => {
       fs.unlinkSync(dataObj.qrCode);
+      fs.unlinkSync(dataObj.barcode);
       resolve(tagPath);
     });
     out.on('error', reject);
@@ -183,7 +191,7 @@ router.post('/generate', validateTag, async (req, res) => {
       });
       fs.writeFileSync(barcodeFile, barcodeBuffer);
 
-      const details = await fetchDetails(productId, shopId, tagId, qrFile, null);
+      const details = await fetchDetails(productId, shopId, tagId, qrFile, barcode);
       const tagPath = await generateTagImage(details, tagDir);
       tagImagePaths.push(tagPath);
     }
