@@ -112,7 +112,7 @@ async function generateTagImage(dataObj, tagDir) {
   ctx.fillText(`Code : ${dataObj.code}`, textX, textY);
 
   // Barcode — center under QR
-  const maxBarcodeWidth = usableWidth;
+  const maxBarcodeWidth = textWidth;
   const maxBarcodeHeight = mmToPx(4.5);
   let barcodeRatio = barcodeImg.width / barcodeImg.height;
   let finalBarcodeWidth = maxBarcodeWidth;
@@ -123,8 +123,8 @@ async function generateTagImage(dataObj, tagDir) {
     finalBarcodeWidth = finalBarcodeHeight * barcodeRatio;
   }
 
-  const barcodeX = (canvas.width - finalBarcodeWidth) / 2;
-  const barcodeY = canvas.height - finalBarcodeHeight - margin;
+  const barcodeX = canvas.width - (2*margin) - qrSize;
+  const barcodeY = canvas.height - finalBarcodeHeight - margin - 10;
   ctx.drawImage(barcodeImg, barcodeX, barcodeY, finalBarcodeWidth, finalBarcodeHeight);
 
   // Save PNG
