@@ -48,12 +48,12 @@ async function generateTagImage(dataObj, tagDir) {
   const mmToPx = (mm) => Math.round((mm / 25.4) * 300);
   const width = mmToPx(44);  // usable width
   const height = mmToPx(22); // usable height
-  const canvas = createCanvas(width, height);
+  const canvas = createCanvas(mmToPx(47), mmToPx(25));
   const ctx = canvas.getContext('2d');
 
   // Background
   ctx.fillStyle = 'white';
-  ctx.fillRect(0, 0, width, height);
+  ctx.fillRect(mmToPx(1.5), mmToPx(1.5), width, height);
 
   // Load QR and barcode images
   const [qrImg, barcodeImg] = await Promise.all([
@@ -62,29 +62,29 @@ async function generateTagImage(dataObj, tagDir) {
   ]);
 
   // QR Code - larger size (90x90px)
-  const qrSize = 90;
-  const qrX = 10;
-  const qrY = 10;
+  const qrSize = mmToPx(25);
+  const qrX = mmToPx(-1.5);
+  const qrY = mmToPx(-1.5);
   ctx.drawImage(qrImg, qrX, qrY, qrSize, qrSize);
 
   // Text Position
-  const textX = qrX + qrSize + 15;
-  let textY = qrY + 5;
+  const textX = qrX + qrSize + mmToPx(3.5);
+  let textY = qrY + mmToPx(3.5);
 
   // Price in large font
   ctx.fillStyle = 'black';
-  ctx.font = 'bold 22px OpenSans';
+  ctx.font = 'bold 34px OpenSans';
   ctx.fillText(`Price : ${dataObj.price}`, textX, textY + 5);
 
   // Other fields in 14px
-  ctx.font = 'bold 14px OpenSans';
-  textY += 30;
+  ctx.font = 'bold 22px OpenSans';
+  textY += 46;
   ctx.fillText(`Shop : ${dataObj.shopName}`, textX, textY);
-  textY += 22;
+  textY += 34;
   ctx.fillText(`Product : ${dataObj.productName}`, textX, textY);
-  textY += 22;
+  textY += 34;
   ctx.fillText(`${dataObj.id}`, textX, textY);
-  textY += 22;
+  textY += 34;
   ctx.fillText(`Code : ${dataObj.code}`, textX, textY);
 
   // Barcode
