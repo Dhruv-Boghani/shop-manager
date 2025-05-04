@@ -66,19 +66,16 @@ function drawWrappedText(ctx, text, x, y, maxWidth, lineHeight) {
 }
 
 async function generateTagImage(dataObj, tagDir) {
-  const canvasWidth = mmToPx(47);
-  const canvasHeight = mmToPx(25);
-  const margin = mmToPx(1.5);
-  const qrSize = mmToPx(22);
-  const usableWidth = canvasWidth - 2 * margin;
-  const textWidth = usableWidth - qrSize;
+  const canvasWidth = mmToPx(50); // Full width
+  const canvasHeight = mmToPx(25); // Full height
+  const qrSize = mmToPx(22); // QR code size
 
   const canvas = createCanvas(canvasWidth, canvasHeight);
   const ctx = canvas.getContext('2d');
 
   // Background
   ctx.fillStyle = 'white';
-  ctx.fillRect(margin, margin, usableWidth, mmToPx(22));
+  ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
   // Load QR and barcode images
   const [qrImg, barcodeImg] = await Promise.all([
@@ -86,34 +83,32 @@ async function generateTagImage(dataObj, tagDir) {
     loadImage(dataObj.barcode),
   ]);
 
-  // Draw QR Code
-  const qrX = margin;
-  const qrY = margin;
+  // Draw QR Code on left side
+  const qrX = 0;
+  const qrY = (canvasHeight - qrSize) / 2;
   ctx.drawImage(qrImg, qrX, qrY, qrSize, qrSize);
 
-  // Text block position
-  const textX = qrX + qrSize + mmToPx(0.5);
+  // Text block
+  const textX = qrX + qrSize + mmToPx(1);
   let textY = qrY + mmToPx(3);
 
-  // Price (big text)
+  // Price - Larger Font
   ctx.fillStyle = 'black';
-  ctx.font = 'bold 28px OpenSans';
-  ctx.fillText(`Price : ${dataObj.price}`, textX, textY + 5);
+  ctx.font = 'bold 30px OpenSans';
+  ctx.fillText(`₹ ${dataObj.price}`, textX, textY + 5);
 
-  // Smaller details
-  ctx.font = 'bold 18px OpenSans';
-  textY += 40;
-  drawWrappedText(ctx, `Shop : ${dataObj.shopName}`, textX, textY, textWidth, 22);
-  textY += 28;
-  drawWrappedText(ctx, `Product : ${dataObj.productName}`, textX, textY, textWidth, 22);
-  textY += 28;
-  drawWrappedText(ctx, `${dataObj.id}`, textX, textY, textWidth, 22);
-  textY += 28;
-  ctx.fillText(`Code : ${dataObj.code}`, textX, textY);
+  // ID
+  ctx.font = 'bold 20px OpenSans';
+  textY += 35;
+  ctx.fillText(`${dataObj.id}`, textX, textY);
 
-  // Barcode — center under QR
-  const maxBarcodeWidth = textWidth;
-  const maxBarcodeHeight = mmToPx(4.5);
+  // Code
+  textY += 28;
+  ctx.fillText(`Code: ${dataObj.code}`, textX, textY);
+
+  // Barcode — Centered horizontally under QR
+  const maxBarcodeWidth = mmToPx(30);
+  const maxBarcodeHeight = mmToPx(5);
   let barcodeRatio = barcodeImg.width / barcodeImg.height;
   let finalBarcodeWidth = maxBarcodeWidth;
   let finalBarcodeHeight = finalBarcodeWidth / barcodeRatio;
@@ -123,8 +118,8 @@ async function generateTagImage(dataObj, tagDir) {
     finalBarcodeWidth = finalBarcodeHeight * barcodeRatio;
   }
 
-  const barcodeX = canvas.width - (2*margin) - qrSize + 10;
-  const barcodeY = canvas.height - finalBarcodeHeight - margin - 15;
+  const barcodeX = canvasWidth - finalBarcodeWidth - mmToPx(1);
+  const barcodeY = canvasHeight - finalBarcodeHeight - mmToPx(1);
   ctx.drawImage(barcodeImg, barcodeX, barcodeY, finalBarcodeWidth, finalBarcodeHeight);
 
   // Save PNG
