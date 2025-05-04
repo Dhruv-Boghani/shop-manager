@@ -92,29 +92,39 @@ async function generateTagImage(dataObj, tagDir) {
   const textX = qrX + qrSize + mmToPx(1);
   let textY = qrY + mmToPx(2.5);
 
- // Price
-ctx.fillStyle = 'black';
-ctx.font = 'bold 52px OpenSans';
-ctx.fillText(`₹ ${dataObj.price}`, textX, textY + 10);
+  const boldFont = 'bold 60px Impact';        // Or 'Arial Black', 'Roboto Black'
+  const midBoldFont = 'bold 38px Impact';
+  const smallBoldFont = 'bold 32px Impact';
 
-// ID (split into 2 lines)
-ctx.font = 'bold 32px OpenSans';
-const id = dataObj.id.toString();
-const mid = Math.ceil(id.length / 2);
-const idLine1 = id.slice(0, mid);
-const idLine2 = id.slice(mid);
-textY += 56;
-ctx.fillText(idLine1, textX, textY);
-ctx.fillText(idLine1, textX + 1, textY); // Simulate extra bold
-textY += 36;
-ctx.fillText(idLine2, textX, textY);
-ctx.fillText(idLine2, textX + 1, textY);
+  // Price
+  ctx.fillStyle = 'black';
+  ctx.font = boldFont;
+  ctx.fillText(`₹ ${dataObj.price}`, textX, textY + 10);
+  ctx.fillText(`₹ ${dataObj.price}`, textX + 1, textY + 10); // extra bold
 
-// Code (in 1 line as before)
-ctx.font = 'bold 28px OpenSans';
-textY += 38;
-ctx.fillText(`Code: ${dataObj.code}`, textX, textY);
-ctx.fillText(`Code: ${dataObj.code}`, textX + 1, textY);
+  // ID (split into 2 lines)
+  ctx.font = midBoldFont;
+  const id = dataObj.id.toString();
+  const mid = Math.ceil(id.length / 2);
+  const idLine1 = id.slice(0, mid);
+  const idLine2 = id.slice(mid);
+  textY += 64;
+  ctx.fillText(idLine1, textX, textY);
+  ctx.fillText(idLine1, textX + 1, textY); // extra bold
+  ctx.fillText(idLine1, textX, textY + 1); // shadow bold
+
+  textY += 40;
+  ctx.fillText(idLine2, textX, textY);
+  ctx.fillText(idLine2, textX + 1, textY);
+  ctx.fillText(idLine2, textX, textY + 1);
+
+  // Code (in 1 line)
+  ctx.font = smallBoldFont;
+  textY += 42;
+  ctx.fillText(`Code: ${dataObj.code}`, textX, textY);
+  ctx.fillText(`Code: ${dataObj.code}`, textX + 1, textY);
+  ctx.fillText(`Code: ${dataObj.code}`, textX, textY + 1);
+
 
 
   // Barcode at bottom right
