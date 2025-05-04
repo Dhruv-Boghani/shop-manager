@@ -94,8 +94,8 @@ async function generateTagImage(dataObj, tagDir) {
 
  // Price
 ctx.fillStyle = 'black';
-ctx.font = 'bold 48px OpenSans';
-ctx.fillText(`₹ ${dataObj.price}`, textX, textY + 5);
+ctx.font = 'bold 52px OpenSans';
+ctx.fillText(`₹ ${dataObj.price}`, textX, textY + 10);
 
 // ID (split into 2 lines)
 ctx.font = 'bold 32px OpenSans';
@@ -103,16 +103,16 @@ const id = dataObj.id.toString();
 const mid = Math.ceil(id.length / 2);
 const idLine1 = id.slice(0, mid);
 const idLine2 = id.slice(mid);
-textY += 48;
+textY += 56;
 ctx.fillText(idLine1, textX, textY);
 ctx.fillText(idLine1, textX + 1, textY); // Simulate extra bold
-textY += 32;
+textY += 36;
 ctx.fillText(idLine2, textX, textY);
 ctx.fillText(idLine2, textX + 1, textY);
 
 // Code (in 1 line as before)
 ctx.font = 'bold 28px OpenSans';
-textY += 34;
+textY += 38;
 ctx.fillText(`Code: ${dataObj.code}`, textX, textY);
 ctx.fillText(`Code: ${dataObj.code}`, textX + 1, textY);
 
