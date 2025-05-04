@@ -94,25 +94,24 @@ async function generateTagImage(dataObj, tagDir) {
 
   // Price
   ctx.fillStyle = 'black';
-  ctx.font = 'bold 36px OpenSans';
+  ctx.font = 'bold 42px OpenSans';
   ctx.fillText(`₹ ${dataObj.price}`, textX, textY + 5);
 
-  // ID
+  // ID (split into 2 lines)
   ctx.font = 'bold 26px OpenSans';
-  textY += 38;
-  ctx.fillText(`${dataObj.id}`, textX, textY);
-
-  // Code in two lines
-  const code = dataObj.code;
-  const mid = Math.ceil(code.length / 2);
-  const codeLine1 = code.slice(0, mid);
-  const codeLine2 = code.slice(mid);
-
-  ctx.font = 'bold 24px OpenSans';
-  textY += 32;
-  ctx.fillText(`Code: ${codeLine1}`, textX, textY);
+  const id = dataObj.id.toString();
+  const mid = Math.ceil(id.length / 2);
+  const idLine1 = id.slice(0, mid);
+  const idLine2 = id.slice(mid);
+  textY += 42;
+  ctx.fillText(`${idLine1}`, textX, textY);
   textY += 28;
-  ctx.fillText(`${codeLine2}`, textX, textY);
+  ctx.fillText(`${idLine2}`, textX, textY);
+
+  // Code (in 1 line as before)
+  ctx.font = 'bold 24px OpenSans';
+  textY += 30;
+  ctx.fillText(`Code: ${dataObj.code}`, textX, textY);
 
   // Barcode at bottom right
   const maxBarcodeWidth = mmToPx(28);
@@ -145,6 +144,7 @@ async function generateTagImage(dataObj, tagDir) {
     out.on('error', reject);
   });
 }
+
 
 
 // Tag generator form page
