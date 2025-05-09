@@ -74,3 +74,11 @@ mongoose.connect(MONGO_URI)
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
+
+const axios = require('axios');
+
+setInterval(() => {
+  axios.get('https://shop-manager-t98e.onrender.com')
+    .then(() => console.log('Pinged server to keep alive'))
+    .catch(err => console.error('Ping failed', err));
+}, 10 * 60 * 1000); // Every 10 minutes
