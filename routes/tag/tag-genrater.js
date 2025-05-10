@@ -31,18 +31,29 @@ const validateTag = [
 async function fetchDetails(productId, shopId, tagId, qrCode, barcode) {
   const product = await Product.findById(productId);
   const shop = await Shop.findById(shopId);
+  
   if (!product || !shop) throw new Error('Invalid Product or Shop');
+
+  // Get the current date in the format DD.MM.YY
+  const currentDate = new Date(product.createdAt);
+  const day = String(currentDate.getDate()).padStart(2, '0');
+  const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // months are 0-indexed
+  const year = String(currentDate.getFullYear()).slice(-2); // get last 2 digits of the year
+
+  // Generate the code in the desired format
+  const code = `${day}.${month}.${year}K${product.buyPrice}`;
 
   return {
     price: product.salePrice,
     shopName: shop.name,
     productName: product.name,
-    code: `123${product.buyPrice}`,
+    code, // Updated code format
     id: tagId,
     qrCode,
     barcode,
   };
 }
+
 
 function mmToPx(mm) {
   return Math.round((mm / 25.4) * 300);

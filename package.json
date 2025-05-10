@@ -34,6 +34,7 @@
     "html5-qrcode": "^2.3.8",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.13.2",
+    "node-cron": "^3.0.3",
     "nodemailer": "^6.10.0",
     "pdf-lib": "^1.17.1",
     "pdfkit": "^0.16.0",
