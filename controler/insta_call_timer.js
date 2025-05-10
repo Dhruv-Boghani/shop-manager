@@ -93,4 +93,4 @@ function startScheduler() {
   });
 }
 
-module.exports = startScheduler;
+module.exports = { startScheduler };
