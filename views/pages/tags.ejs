@@ -13,6 +13,17 @@
 <%- include('../partials/navbar') %>
 <%- include('../partials/popupTag') %>
 
+<nav class="pagination">
+  <% if (currentPage > 1) { %>
+    <a href="/tags?page=<%= currentPage - 1 %>">Previous</a>
+  <% } %>
+  <span>Page <%= currentPage %> of <%= totalPages %></span>
+  <% if (currentPage < totalPages) { %>
+    <a href="/tags?page=<%= currentPage + 1 %>">Next</a>
+  <% } %>
+</nav>
+
+
 <div class="tag-container">
   <h2 class="page-title">Tag List</h2>
 
@@ -31,40 +42,32 @@
         </tr>
       </thead>
       <tbody id="tagTableBody">
-        <% tags.forEach((tag, index) => { %>
-          <tr>
-            <td><%= index + 1 %></td>
-            <td><%= tag._id %></td>
-            <td><%= tag.shop?.name || 'N/A' %></td>
-            <td><%= tag.itemName %></td>
-            <td><%= tag.price %></td>
-            <td>
-              <form id="deleteForm-<%= tag._id %>" action="/tags/delete/<%= tag._id %>" method="POST" onsubmit="return false;">
-                <button type="button" class="delete-btn no-loader" onclick="openDeleteModal('<%= tag._id %>')">Delete</button>
-              </form>              
-            </td>
-          </tr>
-        <% }) %>
+        <!-- Dynamic content loaded with JS -->
       </tbody>
     </table>
+    <div class="pagination" id="paginationControls"></div>
   </div>
 </div>
 
 <script>
   const searchInput = document.getElementById('searchInput');
   const tagTableBody = document.getElementById('tagTableBody');
+  const paginationControls = document.getElementById('paginationControls');
 
-  searchInput.addEventListener('input', async () => {
-    const query = searchInput.value.trim();
-    const res = await fetch(`/tags/search?q=${query}`);
+  let currentPage = 1;
+  let lastQuery = '';
+
+  async function loadTags(page = 1, query = '') {
+    const res = await fetch(`/tags/search?q=${query}&page=${page}`);
     const tags = await res.json();
 
     tagTableBody.innerHTML = '';
+    paginationControls.innerHTML = '';
 
     if (tags.length === 0) {
       tagTableBody.innerHTML = `
         <tr>
-          <td colspan="5" class="no-tags">No tags found</td>
+          <td colspan="6" class="no-tags">No tags found</td>
         </tr>`;
       return;
     }
@@ -72,37 +75,59 @@
     tags.forEach((tag, index) => {
       tagTableBody.innerHTML += `
         <tr>
-          <td>${index + 1}</td>
+          <td>${index + 1 + (page - 1) * 20}</td>
           <td>${tag._id}</td>
+          <td>${tag.shop?.name || 'N/A'}</td>
           <td>${tag.itemName}</td>
           <td>${tag.price}</td>
           <td>
-            <form action="/tags/delete/${tag._id}" method="POST" onsubmit="return confirm('Are you sure to delete this tag?');">
-              <button class="delete-btn" type="submit">Delete</button>
+            <form id="deleteForm-${tag._id}" action="/tags/delete/${tag._id}" method="POST" onsubmit="return false;">
+              <button type="button" class="delete-btn no-loader" onclick="openDeleteModal('${tag._id}')">Delete</button>
             </form>
           </td>
-        </tr>
-      `;
+        </tr>`;
     });
+
+    // Simple prev/next buttons
+    paginationControls.innerHTML = `
+      <button onclick="changePage(${page - 1})" ${page === 1 ? 'disabled' : ''}>Previous</button>
+      <span> Page ${page} </span>
+      <button onclick="changePage(${page + 1})">Next</button>
+    `;
+  }
+
+  function changePage(page) {
+    if (page < 1) return;
+    currentPage = page;
+    loadTags(page, lastQuery);
+  }
+
+  searchInput.addEventListener('input', () => {
+    currentPage = 1;
+    lastQuery = searchInput.value.trim();
+    loadTags(currentPage, lastQuery);
   });
 
   let currentDeleteFormId = null;
-  
-  function openDeleteModal(billId) {
-    currentDeleteFormId = `deleteForm-${billId}`;
+
+  function openDeleteModal(tagId) {
+    currentDeleteFormId = `deleteForm-${tagId}`;
     document.getElementById('deleteModal').style.display = 'block';
   }
-  
+
   function closeDeleteModal() {
     document.getElementById('deleteModal').style.display = 'none';
     currentDeleteFormId = null;
   }
-  
-  document.getElementById('confirmDeleteBtn').addEventListener('click', () => {
+
+  document.getElementById('confirmDeleteBtn')?.addEventListener('click', () => {
     if (currentDeleteFormId) {
       document.getElementById(currentDeleteFormId).submit();
     }
   });
-  </script>
+
+  // Load initial tags
+  window.onload = () => loadTags();
+</script>
 </body>
 </html>

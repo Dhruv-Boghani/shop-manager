@@ -1,17 +1,26 @@
-// routes/tags.js
 const express = require('express');
-const Tag = require('../../model/Tag'); // Adjust the path to your Tag model
 const jwt = require('jsonwebtoken');
-const User = require('../../model/User'); // Adjust the path to your User model
-const Shop = require('../../model/Shop'); // Adjust the path to your Shop model
-const mongoose = require('mongoose'); // Import mongoose for ObjectId conversion
+const mongoose = require('mongoose');
+
+const Tag = require('../../model/Tag');
+const User = require('../../model/User');
+const Shop = require('../../model/Shop');
 
 const router = express.Router();
-// Show all tags
+const TAGS_PER_PAGE = 20;
+
+// Show paginated tags
 router.get('/', async (req, res) => {
   try {
+    const page = parseInt(req.query.page) || 1;
+    const skip = (page - 1) * TAGS_PER_PAGE;
+
     const token = req.cookies.token;
-    const tokenData = jwt.verify(token, 'DhruvBoghani624@#'); // Replace with your secret key
+    const tokenData = jwt.verify(token, 'DhruvBoghani624@#');
+
+    let tags = [];
+    let totalTags = 0;
+    let shopName = null;
 
     if (tokenData.role === 'user') {
       return res.render('pages/error', {
@@ -21,51 +30,80 @@ router.get('/', async (req, res) => {
     }
 
     if (tokenData.role === 'saller') {
-      if (!req.cookies.shop) {
-        return res.redirect('/bill'); // 🛑 Add return here to stop further execution
-      }
+      if (!req.cookies.shop) return res.redirect('/bill');
 
       try {
-        const shopData = jwt.verify(req.cookies.shop, 'DhruvBoghani624@#'); // ✅ Add jwtSecrate
-        const shop = await Shop.findOne({ _id: new mongoose.Types.ObjectId(shopData.shopId) });
+        const shopData = jwt.verify(req.cookies.shop, 'DhruvBoghani624@#');
+        const shop = await Shop.findById(shopData.shopId);
 
         if (!shop) {
           res.clearCookie('shop');
-          return res.redirect('/bill'); // ✅ Fallback if shop not found
+          return res.redirect('/bill');
         }
 
-        const tags = await Tag.find({ shop: shop._id }).sort({ createdAt: -1 });
-        const shopName = shop.name;
-        return res.render('pages/tags', { tags, shopName });
+        totalTags = await Tag.countDocuments({ shop: shop._id });
+        tags = await Tag.find({ shop: shop._id })
+          .sort({ createdAt: -1 })
+          .skip(skip)
+          .limit(TAGS_PER_PAGE);
 
+        shopName = shop.name;
+
+        return res.render('pages/tags', {
+          tags,
+          shopName,
+          currentPage: page,
+          totalPages: Math.ceil(totalTags / TAGS_PER_PAGE)
+        });
       } catch (error) {
-        console.error('JWT Error or Shop not found:', error);
+        console.error('JWT or shop error:', error);
         res.clearCookie('shop');
-        return res.redirect('/bill'); // ✅ Safe fallback
+        return res.redirect('/bill');
       }
     }
-
 
     if (tokenData.role === 'manager') {
-      if (!req.cookies.shop) {
-        return res.redirect('/bill'); // 🛑 Add return here to stop further execution
-      }
+      if (!req.cookies.shop) return res.redirect('/bill');
 
       const user = await User.findOne({ email: tokenData.email });
-      const shop = await Shop.findOne({ manager: new mongoose.Types.ObjectId(user._id) });
-      const tags = await Tag.find({ shop: new mongoose.Types.ObjectId(shop._id) }).sort({ createdAt: -1 });
+      const shop = await Shop.findOne({ manager: user._id });
 
-      return res.render('pages/tags', { tags, shopName: null });
+      totalTags = await Tag.countDocuments({ shop: shop._id });
+      tags = await Tag.find({ shop: shop._id })
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(TAGS_PER_PAGE);
+
+      return res.render('pages/tags', {
+        tags,
+        shopName: null,
+        currentPage: page,
+        totalPages: Math.ceil(totalTags / TAGS_PER_PAGE)
+      });
     }
 
-    const tags = await Tag.find().sort({ createdAt: -1 }).populate('shop', 'name'); // populate only 'name' from shop
-    res.render('pages/tags', { tags, shopName: null }); // shopName not needed globally for admin
+    // For admin
+    totalTags = await Tag.countDocuments();
+    tags = await Tag.find()
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(TAGS_PER_PAGE)
+      .populate('shop', 'name');
+
+    res.render('pages/tags', {
+      tags,
+      shopName: null,
+      currentPage: page,
+      totalPages: Math.ceil(totalTags / TAGS_PER_PAGE)
+    });
+
   } catch (err) {
     console.error(err);
     res.status(500).send('Server Error');
   }
 });
-// Search route - return filtered tags as JSON
+
+// Search route (returns JSON)
 router.get('/search', async (req, res) => {
   const query = req.query.q || '';
 
@@ -83,9 +121,9 @@ router.get('/search', async (req, res) => {
             { itemName: { $regex: query, $options: 'i' } }
           ]
         }
-
       },
-      { $sort: { createdAt: -1 } }
+      { $sort: { createdAt: -1 } },
+      { $limit: 50 } // Optional: limit for search results
     ]);
 
     res.json(tags);
@@ -94,8 +132,6 @@ router.get('/search', async (req, res) => {
     res.status(500).json({ error: 'Failed to search tags' });
   }
 });
-
-
 
 // Delete a tag by ID
 router.post('/delete/:id', async (req, res) => {
