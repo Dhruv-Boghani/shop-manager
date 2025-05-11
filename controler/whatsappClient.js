@@ -81,16 +81,16 @@ async function connectToWhatsApp() {
             fs.mkdirSync(sessionPath, { recursive: true });
             console.log('Session directory created.');
         }
-
+    
         // STEP 2: Check if any local session exists
         let hasLocalSession = fs.readdirSync(sessionPath).length > 0;
-
+    
         if (!hasLocalSession) {
             console.log('No local session found. Trying to download from Drive...');
             try {
                 await downloadFromDrive();
                 hasLocalSession = fs.readdirSync(sessionPath).length > 0;
-
+    
                 if (hasLocalSession) {
                     console.log('✅ Session successfully downloaded from Drive.');
                     sessionDownloaded = true;
@@ -98,7 +98,7 @@ async function connectToWhatsApp() {
                     console.log('⚠️ No session files found on Drive.');
                     sessionDownloaded = false;
                 }
-
+    
             } catch (error) {
                 console.error('Drive download failed:', error);
                 sessionDownloaded = false;
@@ -107,10 +107,10 @@ async function connectToWhatsApp() {
             console.log('✅ Local session found.');
             sessionDownloaded = true;
         }
-
+    
         // STEP 2: Connect with existing or new session
         const { state, saveCreds } = await useMultiFileAuthState(sessionPath);
-
+        
         sock = makeWASocket({
             auth: state,
             printQRInTerminal: true, // Show QR only if no session found
@@ -121,19 +121,18 @@ async function connectToWhatsApp() {
             await saveCreds();
 
             // Now run your Python script to upload session to Drive immediately after creds update
-            const scriptPath = path.join(__dirname, 'script.py');
-            exec(`python ${scriptPath} clear_and_upload_to_drive`, (error, stdout, stderr) => {
+            const { exec } = require('child_process');
+            exec('python session-uploader.py', (error, stdout, stderr) => {
                 if (error) {
-                    console.error(`❌ Upload error: ${error.message}`);
+                    console.error(`Error uploading session: ${error.message}`);
                     return;
                 }
                 if (stderr) {
-                    console.error(`⚠️ Python stderr: ${stderr}`);
+                    console.error(`stderr: ${stderr}`);
                     return;
                 }
-                console.log(`✅ Upload success: ${stdout}`);
+                console.log(`Python script output: ${stdout}`);
             });
-
         });
 
         sock.ev.on('connection.update', async (update) => {
