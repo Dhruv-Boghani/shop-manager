@@ -103,33 +103,32 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Search route (returns JSON)
 router.get('/search', async (req, res) => {
   const query = req.query.q || '';
+  const page = parseInt(req.query.page) || 1;
+  const limit = 50;
+  const skip = (page - 1) * limit;
 
   try {
-    const tags = await Tag.aggregate([
-      {
-        $addFields: {
-          idStr: { $toString: '$_id' }
-        }
-      },
-      {
-        $match: {
-          $or: [
-            { idStr: { $regex: query, $options: 'i' } },
-            { itemName: { $regex: query, $options: 'i' } }
-          ]
-        }
-      },
-      { $sort: { createdAt: -1 } },
-      { $limit: 50 } // Optional: limit for search results
-    ]);
+    const filter = query
+      ? {
+        $or: [
+          { _id: { $regex: query, $options: 'i' } },
+          { itemName: { $regex: query, $options: 'i' } }
+        ]
+      }
+      : {};
+
+    const tags = await Tag.find(filter)
+      .populate('shop', 'name') // Populate only the name field
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
 
     res.json(tags);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Failed to search tags' });
+    res.status(500).json({ error: 'Failed to fetch tags' });
   }
 });
 

@@ -2,7 +2,7 @@ const cron = require("node-cron");
 const axios = require("axios");
 
 // Timezone for Singapore (UTC+8)
-const TIMEZONE = "Asia/Singapore";
+const TIMEZONE = "Asia/Kolkata";
 
 // Constants
 const BASE_URL = "https://insta-uploader.onrender.com";
@@ -15,13 +15,13 @@ const weekDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Frida
 
 // Upload schedule per day (HH:mm format)
 const uploadSchedule = {
-  Sunday:    ["11:33", "16:00", "19:42", "23:15"],
-  Monday:    ["11:15", "15:20", "19:10", "23:30"],
-  Tuesday:   ["11:40", "15:50", "19:45", "23:00"],
-  Wednesday: ["11:20", "15:40", "19:25", "23:40"],
-  Thursday:  ["11:50", "16:10", "19:35", "22:50"],
-  Friday:    ["11:25", "15:15", "19:05", "23:35"],
-  Saturday:  ["12:45", "15:55", "19:30", "23:20"],
+  Sunday:    ["09:03", "13:30", "17:12", "20:45"],
+  Monday:    ["08:45", "12:50", "16:40", "21:00"],
+  Tuesday:   ["09:10", "13:20", "17:15", "20:30"],
+  Wednesday: ["08:50", "13:10", "16:55", "21:10"],
+  Thursday:  ["09:20", "13:40", "17:05", "20:20"],
+  Friday:    ["08:55", "12:45", "16:35", "21:05"],
+  Saturday:  ["10:15", "13:25", "17:00", "20:50"],
 };
 
 // Store references to active cron jobs
