@@ -31,7 +31,7 @@ const validateTag = [
 async function fetchDetails(productId, shopId, tagId, qrCode, barcode) {
   const product = await Product.findById(productId);
   const shop = await Shop.findById(shopId);
-  
+
   if (!product || !shop) throw new Error('Invalid Product or Shop');
 
   // Get the current date in the format DD.MM.YY
@@ -53,7 +53,6 @@ async function fetchDetails(productId, shopId, tagId, qrCode, barcode) {
     barcode,
   };
 }
-
 
 function mmToPx(mm) {
   return Math.round((mm / 25.4) * 300);
@@ -109,17 +108,18 @@ async function generateTagImage(dataObj, tagDir) {
   ctx.fillText(`₹ ${dataObj.price}`, textX, textY + 10);
   ctx.fillText(`₹ ${dataObj.price}`, textX + 1, textY + 10); // Extra bold effect
 
-  // ID (split into 2 lines)
+  // ID (split into first 6 and last 6 characters)
   ctx.font = 'bold 38px OpenSans';
   const id = dataObj.id.toString();
-  const mid = Math.ceil(id.length / 2);
-  const idLine1 = id.slice(0, mid);
-  const idLine2 = id.slice(mid);
+  const shortId = `${id.slice(0, 6)}-${id.slice(-6)}`;  // Combine with hyphen
 
   textY += 64;
-  ctx.fillText(idLine1, textX, textY);
-  ctx.fillText(idLine1, textX + 1, textY); // Extra bold
-  ctx.fillText(idLine1, textX, textY + 1); // Shadow effect
+
+  // Draw with shadow effect and bold outline
+  ctx.fillText(shortId, textX, textY);
+  ctx.fillText(shortId, textX + 1, textY); // Extra bold effect
+  ctx.fillText(shortId, textX, textY + 1); // Shadow effect
+
 
   textY += 40;
   ctx.fillText(idLine2, textX, textY);
