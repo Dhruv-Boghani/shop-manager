@@ -3,7 +3,8 @@ body {
     font-family: 'Segoe UI', sans-serif;
     background-color: #f2f2f2;
     margin: 0;
-    padding: 0;
+      padding: 20px;
+  margin-top: 50px;
   }
   
   .otp-container {

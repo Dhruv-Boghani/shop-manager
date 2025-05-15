@@ -9,7 +9,9 @@ body {
   font-family: 'Segoe UI', sans-serif;
   background-color: #f7f9fb;
   color: #333;
-  /* padding: 20px; */
+    padding: 20px;
+  margin-top: 75px;
+
 }
 
 .container {
