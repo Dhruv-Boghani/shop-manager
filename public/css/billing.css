@@ -129,6 +129,11 @@ body {
   text-align: center;
 }
 
+.green{
+  height: 40px;
+  font-size: 14px;
+}
+
 .btn.green {
   background-color: #27ae60;
   color: white;

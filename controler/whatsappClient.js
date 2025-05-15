@@ -121,18 +121,18 @@ async function connectToWhatsApp() {
             await saveCreds();
 
             // Now run your Python script to upload session to Drive immediately after creds update
-            const { exec } = require('child_process');
-            exec('python session-uploader.py', (error, stdout, stderr) => {
-                if (error) {
-                    console.error(`Error uploading session: ${error.message}`);
-                    return;
-                }
-                if (stderr) {
-                    console.error(`stderr: ${stderr}`);
-                    return;
-                }
-                console.log(`Python script output: ${stdout}`);
-            });
+            // const { exec } = require('child_process');
+            // exec('python session-uploader.py', (error, stdout, stderr) => {
+            //     if (error) {
+            //         console.error(`Error uploading session: ${error.message}`);
+            //         return;
+            //     }
+            //     if (stderr) {
+            //         console.error(`stderr: ${stderr}`);
+            //         return;
+            //     }
+            //     console.log(`Python script output: ${stdout}`);
+            // });
         });
 
         sock.ev.on('connection.update', async (update) => {

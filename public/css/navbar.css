@@ -1,129 +1,138 @@
+/* Fix navbar at the top */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 2;
+  background-color: white; /* or whatever bg color your navbar uses */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* optional, for subtle shadow */
+}
+
 .custom-navbar {
-    background-color: #222;
-    color: white;
-    padding: 10px 20px;
-  }
-  
-  .navbar-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-  
-  .navbar-brand {
-    font-size: 22px;
-    font-weight: bold;
-    color: white;
-    text-decoration: none;
-  }
-  
+  background-color: #222;
+  color: white;
+  padding: 10px 20px;
+}
+
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.navbar-brand {
+  font-size: 22px;
+  font-weight: bold;
+  color: white;
+  text-decoration: none;
+}
+
+.navbar-toggle {
+  font-size: 24px;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  display: none;
+}
+
+.navbar-links {
+  list-style: none;
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* space between logo and text */
+  font-weight: bold;
+  font-size: 20px;
+  color: white;
+  text-decoration: none;
+}
+
+.navbar-brand img {
+  height: 30px; /* adjust logo size */
+  width: auto;
+}
+
+.navbar-links li a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 8px 12px;
+  display: inline-block;
+  transition: background 0.2s;
+}
+
+.navbar-links li a:hover {
+  background-color: #444;
+  border-radius: 5px;
+}
+
+/* Dropdown */
+.dropdown {
+  position: relative;
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  background-color: #333;
+  padding: 10px 0;
+  top: 100%;
+  right: 0;
+  min-width: 160px;
+  border-radius: 5px;
+  z-index: 999;
+}
+
+.dropdown-menu li {
+  text-align: left;
+  box-sizing: border-box;
+}
+
+.dropdown-menu a {
+  padding: 10px 15px;
+  width: 100%;
+  display: block;
+  color: white;
+  box-sizing: border-box;
+}
+
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+.danger {
+  color: red;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
   .navbar-toggle {
-    font-size: 24px;
-    background: none;
-    border: none;
-    color: white;
-    cursor: pointer;
-    display: none;
+    display: block;
   }
-  
+
   .navbar-links {
-    list-style: none;
-    display: flex;
-    gap: 15px;
-    align-items: center;
-    margin: 0;
-    padding: 0;
-  }
-  
-  .navbar-brand {
-    display: flex;
-    align-items: center;
-    gap: 8px; /* space between logo and text */
-    font-weight: bold;
-    font-size: 20px;
-    color: white;
-    text-decoration: none;
-  }
-  
-  .navbar-brand img {
-    height: 30px; /* adjust logo size */
-    width: auto;
-  }
-  
-  .navbar-links li a {
-    color: white;
-    text-decoration: none;
-    font-weight: 500;
-    padding: 8px 12px;
-    display: inline-block;
-    transition: background 0.2s;
-  }
-  
-  .navbar-links li a:hover {
-    background-color: #444;
-    border-radius: 5px;
-  }
-  
-  
-  /* Dropdown */
-  .dropdown {
-    position: relative;
-  }
-  
-  .dropdown-menu {
-    display: none;
-    position: absolute;
-    background-color: #333;
-    padding: 10px 0;
-    top: 100%;
-    right: 0;
-    min-width: 160px;
-    border-radius: 5px;
-    z-index: 999;
-  }
-  
-  .dropdown-menu li {
-    text-align: left;
-    box-sizing: border-box;
-  }
-  
-  .dropdown-menu a {
-    padding: 10px 15px;
+    flex-direction: column;
     width: 100%;
-    display: block;
-    color: white;
-    box-sizing: border-box;
+    display: none;
+    margin-top: 10px;
   }
-  
-  .dropdown:hover .dropdown-menu {
-    display: block;
+
+  .navbar-links.active {
+    display: flex;
   }
-  
-  .danger {
-    color: red;
+
+  .navbar-links li {
+    width: 100%;
+    text-align: left;
   }
-  
-  /* Responsive */
-  @media (max-width: 768px) {
-    .navbar-toggle {
-      display: block;
-    }
-  
-    .navbar-links {
-      flex-direction: column;
-      width: 100%;
-      display: none;
-      margin-top: 10px;
-    }
-  
-    .navbar-links.active {
-      display: flex;
-    }
-  
-    .navbar-links li {
-      width: 100%;
-      text-align: left;
-    }
-  }
-  
+}

@@ -113,13 +113,14 @@ router.post("/", validateBill, async (req, res) => {
     const productPrice = product.rate * product.quantity;
     totalAmount += productPrice;
   });
-  console.log("totalAmount", totalAmount);
+  // console.log("totalAmount", totalAmount);
+  const finalAmount = totalReceivingAmount === 0 ? totalAmount : totalReceivingAmount;
 
   const bill = new Bill({
     shopId: shopId,
     customerName: customerName || "Unknown Customer",
     customerPhone: mobileNo || "Unknown Number",
-    totalReceiveAmount: totalReceivingAmount,
+    totalReceiveAmount: finalAmount,
     products: products,
     billNo: billno,
     totalAmount: totalAmount,

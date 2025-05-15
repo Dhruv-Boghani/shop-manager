@@ -40,7 +40,7 @@
           <label for="product" class="form-label">Select Product</label>
           <select class="form-select" name="product" id="product" required>
             <% products.forEach(prod => { %>
-              <option value="<%= prod._id %>"><%= prod.name %></option>
+              <option value="<%= prod._id %>"><%= prod.name %>(<%= prod.productSKU %>)</option>
             <% }) %>
           </select>
         </div>

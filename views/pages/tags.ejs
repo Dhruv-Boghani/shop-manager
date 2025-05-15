@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,101 +9,164 @@
   <link href="/css/navbar.css" rel="stylesheet">
   <link href="/css/popup.css" rel="stylesheet">
 </head>
+
 <body>
 
-<%- include('../partials/navbar') %>
-<%- include('../partials/popupTag') %>
+  <%- include('../partials/navbar') %>
+  <%- include('../partials/popupTag') %>
 
-<div class="tag-container">
-  <h2 class="page-title">Tag List</h2>
+      <div class="tag-container">
+        <h2 class="page-title">Tag List</h2>
 
-  <input type="text" id="searchInput" class="search-box" placeholder="Search by Tag ID or Item Name...">
+        <input type="text" id="searchInput" class="search-box" placeholder="Search by Tag ID or Item Name...">
 
-  <div class="table-wrapper">
-    <table class="tag-table">
-      <thead>
+        <div class="table-wrapper">
+          <table class="tag-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Tag ID</th>
+                <th>Shop Name</th>
+                <th>Item Name</th>
+                <th>Price (₹)</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="tagTableBody">
+              <!-- Loaded by JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <div id="pagination" class="pagination">
+          <!-- Pagination buttons -->
+        </div>
+      </div>
+
+      <script>
+        const searchInput = document.getElementById('searchInput');
+        const tagTableBody = document.getElementById('tagTableBody');
+        const pagination = document.getElementById('pagination');
+        let currentPage = 1;
+        const limit = 50;
+
+        async function fetchTags(page = 1, query = '') {
+          const res = await fetch(`/tags/search?q=${query}&page=${page}`);
+          const data = await res.json();
+
+          const tags = data.tags;
+          const totalPages = data.totalPages;
+          currentPage = data.currentPage;
+
+          tagTableBody.innerHTML = '';
+
+          if (!tags.length) {
+            tagTableBody.innerHTML = `
         <tr>
-          <th>#</th>
-          <th>Tag ID</th>
-          <th>Shop Name</th>
-          <th>Item Name</th>
-          <th>Price (₹)</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody id="tagTableBody">
-        <% tags.forEach((tag, index) => { %>
-          <tr>
-            <td><%= index + 1 %></td>
-            <td><%= tag._id %></td>
-            <td><%= tag.shop?.name || 'N/A' %></td>
-            <td><%= tag.itemName %></td>
-            <td><%= tag.price %></td>
-            <td>
-              <form id="deleteForm-<%= tag._id %>" action="/tags/delete/<%= tag._id %>" method="POST" onsubmit="return false;">
-                <button type="button" class="delete-btn no-loader" onclick="openDeleteModal('<%= tag._id %>')">Delete</button>
-              </form>              
-            </td>
-          </tr>
-        <% }) %>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<script>
-  const searchInput = document.getElementById('searchInput');
-  const tagTableBody = document.getElementById('tagTableBody');
-
-  searchInput.addEventListener('input', async () => {
-    const query = searchInput.value.trim();
-    const res = await fetch(`/tags/search?q=${query}`);
-    const tags = await res.json();
-
-    tagTableBody.innerHTML = '';
-
-    if (tags.length === 0) {
-      tagTableBody.innerHTML = `
-        <tr>
-          <td colspan="5" class="no-tags">No tags found</td>
+          <td colspan="6" class="no-tags">No tags found</td>
         </tr>`;
-      return;
-    }
+            pagination.innerHTML = '';
+            return;
+          }
 
-    tags.forEach((tag, index) => {
-      tagTableBody.innerHTML += `
+          tags.forEach((tag, index) => {
+            tagTableBody.innerHTML += `
         <tr>
-          <td>${index + 1}</td>
+          <td>${(page - 1) * limit + index + 1}</td>
           <td>${tag._id}</td>
+          <td>${tag.shop?.name || 'N/A'}</td>
           <td>${tag.itemName}</td>
           <td>${tag.price}</td>
           <td>
-            <form action="/tags/delete/${tag._id}" method="POST" onsubmit="return confirm('Are you sure to delete this tag?');">
-              <button class="delete-btn" type="submit">Delete</button>
+            <form id="deleteForm-${tag._id}" action="/tags/delete/${tag._id}" method="POST" onsubmit="return false;">
+              <button type="button" class="delete-btn no-loader" onclick="openDeleteModal('${tag._id}')">Delete</button>
             </form>
           </td>
         </tr>
       `;
-    });
-  });
+          });
 
-  let currentDeleteFormId = null;
-  
-  function openDeleteModal(billId) {
-    currentDeleteFormId = `deleteForm-${billId}`;
-    document.getElementById('deleteModal').style.display = 'block';
-  }
-  
-  function closeDeleteModal() {
-    document.getElementById('deleteModal').style.display = 'none';
-    currentDeleteFormId = null;
-  }
-  
-  document.getElementById('confirmDeleteBtn').addEventListener('click', () => {
-    if (currentDeleteFormId) {
-      document.getElementById(currentDeleteFormId).submit();
-    }
-  });
-  </script>
+          renderPagination(totalPages, query);
+        }
+
+        function renderPagination(totalPages, query) {
+          pagination.innerHTML = '';
+
+          const createBtn = (text, page, disabled = false, isActive = false) => {
+            const button = document.createElement('button');
+            button.textContent = text;
+            if (disabled) button.disabled = true;
+            if (isActive) button.classList.add('active');
+            button.addEventListener('click', () => fetchTags(page, query));
+            return button;
+          };
+
+          const maxPagesToShow = 3;
+          const startPage = Math.max(currentPage - maxPagesToShow, 1);
+          const endPage = Math.min(currentPage + maxPagesToShow, totalPages);
+
+          // ⬅️ Jump back 3 pages
+          if (currentPage - 3 > 1) {
+            pagination.appendChild(createBtn('⏪3', currentPage - 3));
+          }
+
+          // ⬅️ Previous arrow
+          if (currentPage > 1) {
+            pagination.appendChild(createBtn('←prev', currentPage - 1));
+          }
+
+          // Page numbers
+          for (let i = startPage; i <= endPage; i++) {
+            if (i === currentPage) {
+              const span = document.createElement('span');
+              span.textContent = i;
+              span.classList.add('current-page');
+              pagination.appendChild(span);
+            } else {
+              pagination.appendChild(createBtn(i, i));
+            }
+          }
+
+          // ➡️ Next arrow
+          if (currentPage < totalPages) {
+            pagination.appendChild(createBtn('next→', currentPage + 1));
+          }
+
+          // ➡️ Jump forward 3 pages
+          if (currentPage + 3 < totalPages) {
+            pagination.appendChild(createBtn('3⏩', currentPage + 3));
+          }
+
+        }
+
+
+        searchInput.addEventListener('input', () => {
+          const query = searchInput.value.trim();
+          fetchTags(1, query); // Reset to page 1 on new search
+        });
+
+        let currentDeleteFormId = null;
+
+        function openDeleteModal(tagId) {
+          currentDeleteFormId = `deleteForm-${tagId}`;
+          document.getElementById('deleteModal').style.display = 'block';
+        }
+
+        function closeDeleteModal() {
+          document.getElementById('deleteModal').style.display = 'none';
+          currentDeleteFormId = null;
+        }
+
+        document.getElementById('confirmDeleteBtn')?.addEventListener('click', () => {
+          if (currentDeleteFormId) {
+            document.getElementById(currentDeleteFormId).submit();
+          }
+        });
+
+        // Initial load
+        fetchTags();
+      </script>
+
 </body>
+
 </html>

@@ -180,7 +180,7 @@ router.get('/', async (req, res) => {
       });
     }
 
-    const products = await Product.find({}, '_id name');
+    const products = await Product.find({}, '_id name productSKU');
     const shops = await Shop.find({}, '_id name');
     res.render('./pages/tag-generator', { products, shops, errors: [] });
   } catch (err) {

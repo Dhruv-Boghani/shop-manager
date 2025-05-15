@@ -124,9 +124,8 @@
       function makeBill() {
         const customerName = document.getElementById("customerName").value.trim() || "Unknown Customer";
         const mobileNo = document.getElementById("mobileNo").value.trim() || "Unknown Number";
-        const totalAmount = document.getElementById("totalAmount").value;
+        const totalAmount = document.getElementById("totalAmount").value ?? 0;
 
-        totalAmount = totalAmount ?? 0;
         if (scannedTags.size === 0) return alert("No tags scanned.");
 
         const tagIds = Array.from(scannedTags);
