@@ -69,7 +69,7 @@ function startPingAndUploadFlow() {
 
 // Main exported function
 function startScheduler() {
-  console.log("🚀 Scheduler initialized. Will set upload tasks daily at 6 AM Singapore time.");
+  console.log("🚀 Scheduler initialized. Will set upload tasks daily at 6 AM India time.");
 
   // 6:00 AM daily scheduler
   cron.schedule('0 6 * * *', () => {
@@ -88,7 +88,7 @@ function startScheduler() {
       });
       activeJobs.push(job);
     });
-  }, {
+  }, {  
     timezone: TIMEZONE
   });
 }
