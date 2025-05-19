@@ -36,6 +36,8 @@ router.get('/', (req, res) => {
 
 
 router.post("/", validateBill, async (req, res) => {
+  console.log("Body received:", req.body);
+
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -109,7 +111,7 @@ router.post("/", validateBill, async (req, res) => {
     totalAmount += productPrice;
   });
   // console.log("totalAmount", totalAmount);
-  const finalAmount = totalReceivingAmount === 0 ? totalAmount : totalReceivingAmount;
+  const finalAmount = Number(totalReceivingAmount) || totalAmount;
 
   const bill = new Bill({
     shopId: shopId,

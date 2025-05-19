@@ -24,3 +24,5 @@ shopSchema.index({ name: 1, address: 1 }, { unique: true });
 
 const Shop = mongoose.model('Shop', shopSchema);
 module.exports = Shop;
+
+// module.exports = shopSchema

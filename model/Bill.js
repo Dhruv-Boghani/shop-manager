@@ -54,3 +54,5 @@
 
   const Bill = mongoose.model('Bill', billSchema);
   module.exports = Bill;
+
+  // module.exports = billSchema
