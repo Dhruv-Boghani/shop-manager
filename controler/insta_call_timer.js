@@ -71,8 +71,8 @@ function startPingAndUploadFlow() {
 function startScheduler() {
   console.log("🚀 Scheduler initialized. Will set upload tasks daily at 6 AM India time.");
 
-  // 6:00 AM daily scheduler
-  cron.schedule('0 6 * * *', () => {
+  // Function to schedule today's tasks
+  const scheduleTodayUploads = () => {
     const todayIndex = new Date().getDay();
     const todayName = weekDays[todayIndex];
     const times = uploadSchedule[todayName];
@@ -88,9 +88,16 @@ function startScheduler() {
       });
       activeJobs.push(job);
     });
-  }, {  
+  };
+
+  // Run once immediately on startup
+  scheduleTodayUploads();
+
+  // Then run daily at 6 AM
+  cron.schedule('0 6 * * *', scheduleTodayUploads, {
     timezone: TIMEZONE
   });
 }
+
 
 module.exports = { startScheduler };
