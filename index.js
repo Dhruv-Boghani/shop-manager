@@ -65,8 +65,8 @@ app.use('/assign', require('./routes/shop/assign'));
 
 
 //connection
-// connectToWhatsApp(); // call this at startup
-// startScheduler();
+connectToWhatsApp(); // call this at startup
+startScheduler();
 mongoose.connect(MONGO_URI)
   .then(() => {
     console.log('MongoDB connected');
