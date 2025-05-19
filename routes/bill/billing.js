@@ -13,9 +13,6 @@ const jwtSecrate = "DhruvBoghani624@#";
 
 const validateBill = [
   body("tagIds").isArray({ min: 1 }).withMessage("At least one tag is required"),
-  body("totalReceivingAmount")
-    .isNumeric()
-    .withMessage("Total receiving amount must be a number"),
   body("customerName").optional().isString(),
   body("mobileNo").optional().isString(),
 ];
