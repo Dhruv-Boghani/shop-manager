@@ -5,7 +5,7 @@ const axios = require("axios");
 const TIMEZONE = "Asia/Kolkata";
 
 // Constants
-const BASE_URL = "https://insta-uploader.onrender.com";
+const BASE_URL = "https://echonights-07.onrender.com";
 const UPLOAD_URL = `${BASE_URL}/upload`;
 const MAX_CALLS = 6;
 const INTERVAL_MS = 90 * 1000; // 1.5 minutes
