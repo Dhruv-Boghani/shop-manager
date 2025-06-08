@@ -15,13 +15,13 @@ const weekDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Frida
 
 // Upload schedule per day (HH:mm format)
 const uploadSchedule = {
-  Sunday:    ["09:00", "11:00", "13:25", "15:30", "17:00", "19:10", "21:15"], // 7 reels - relaxed day, high activity
-  Monday:    ["08:45", "12:50", "16:40", "19:15", "21:00"],          // 5 reels - work day, evening peaks
-  Tuesday:   ["09:10", "13:20", "17:15", "19:40", "21:30"],          // 5 reels - light lunch + evening
-  Wednesday: ["08:50", "13:10", "16:55", "18:30", "20:30", "22:00"], // 6 reels - midweek surge
-  Thursday:  ["09:20", "13:40", "17:05", "19:20", "21:20"],          // 5 reels - pre-weekend push
-  Friday:    ["08:55", "12:45", "16:35", "18:50", "20:30", "21:50"], // 6 reels - Friday night spike
-  Saturday:  ["08:30", "10:00", "13:00", "17:00", "19:30", "21:45"], // 6 reels - weekend max
+  Sunday:    ["08:00", "11:00", "14:00", "17:30", "20:00"],
+  Monday:    ["07:30", "10:30", "13:15", "17:00", "20:45"],
+  Tuesday:   ["08:15", "11:10", "15:00", "18:10", "21:30"],
+  Wednesday: ["07:45", "10:00", "13:40", "16:30", "20:20"],
+  Thursday:  ["08:30", "11:15", "14:30", "17:20", "21:00"],
+  Friday:    ["07:00", "10:45", "13:30", "17:15", "20:40"],
+  Saturday:  ["08:10", "11:00", "14:20", "17:50", "21:15"],
 };
 
 // Store references to active cron jobs
@@ -68,7 +68,7 @@ function startPingAndUploadFlow() {
 }
 
 // Main exported function
-function startScheduler() {
+function kanishka__07__() {
   console.log("🚀 Scheduler initialized. Will set upload tasks daily at 6 AM India time.");
 
   // Function to schedule today's tasks
@@ -100,4 +100,4 @@ function startScheduler() {
 }
 
 
-module.exports = { startScheduler };
+module.exports = { kanishka__07__ };

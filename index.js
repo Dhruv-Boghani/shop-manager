@@ -7,7 +7,8 @@ const cookieParser = require('cookie-parser');
 const expressLayouts = require('express-ejs-layouts');
 require('dotenv').config();
 const { connectToWhatsApp } = require('./controler/whatsappClient');
-const { startScheduler } = require('./controler/insta_call_timer');
+const { kanishka__07__ } = require('./controler/kanishka__07__');
+const { echonights__07__ } = require('./controler/echonights__07__');
 
 const corsConfig = {
   origin: "*",
@@ -66,7 +67,9 @@ app.use('/assign', require('./routes/shop/assign'));
 
 //connection
 connectToWhatsApp(); // call this at startup
-startScheduler();
+kanishka__07__();
+echonights__07__();
+
 mongoose.connect(MONGO_URI)
   .then(() => {
     console.log('MongoDB connected');
