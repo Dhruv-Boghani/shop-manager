@@ -14,7 +14,7 @@ const INTERVAL_MS = 90 * 1000; // 1.5 minutes
 const weekDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 // Upload schedule per day (HH:mm format)
-const account2Schedule = {
+const uploadSchedule = {
   Sunday:    ["07:45", "09:30", "11:00", "13:15", "15:45", "18:00", "20:10", "22:00"],
   Monday:    ["08:20", "10:40", "13:00", "15:15", "17:30", "19:45", "21:50"],
   Tuesday:   ["07:30", "09:15", "11:30", "13:50", "16:00", "18:10", "20:20", "22:15"],
