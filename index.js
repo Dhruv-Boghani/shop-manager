@@ -66,7 +66,7 @@ app.use('/assign', require('./routes/shop/assign'));
 
 
 //connection
-connectToWhatsApp(); // call this at startup
+// connectToWhatsApp(); // call this at startup
 kanishka__07__();
 echonights__07__();
 

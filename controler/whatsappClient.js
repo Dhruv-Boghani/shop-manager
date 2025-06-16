@@ -175,7 +175,7 @@ async function connectToWhatsApp() {
 async function getClient() {
     if (!sock) {
         console.log('🔄 Initializing WhatsApp client...');
-        await connectToWhatsApp();
+        // await connectToWhatsApp();
     }
     return sock;
 }
