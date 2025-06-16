@@ -135,26 +135,41 @@ router.post('/', validateShop, async (req, res) => {
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { name, address, product, /*productSKU*/ } = req.body;
-
-
+    // Normalize input
+    const name = req.body.name.trim().toLowerCase();
+    const address = req.body.address.trim().toLowerCase();
+    const product = req.body.product;
     const productIds = (Array.isArray(product) ? product : [product]).map(id => new mongoose.Types.ObjectId(id));
+
+    // Check for existing shop
+    const existingShop = await Shop.findOne({ name, address });
+    if (existingShop) {
+      return res.status(400).render('./pages/error', {
+        message: 'Shop with this name and address already exists!',
+        error: null
+      });
+    }
 
     const shop = new Shop({
       name,
       address,
       product: productIds
     });
+
     await shop.save();
-    res.redirect('/shop'); // Redirect to the shop list page after saving
-    res.status(201).json(shop);
+    res.redirect('/shop'); // or res.status(201).json(shop);
   } catch (error) {
+    console.error('Error saving shop:', error);
     if (error.code === 11000) {
       return res.status(400).render('./pages/error', {
         message: 'Shop with this name and address already exists!',
         error: null
       });
     }
+    res.status(500).render('./pages/error', {
+      message: 'An unexpected error occurred.',
+      error
+    });
   }
 });
 

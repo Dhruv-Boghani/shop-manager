@@ -104,12 +104,12 @@ async function generateTagImage(dataObj, tagDir) {
 
   // Price
   ctx.fillStyle = 'black';
-  ctx.font = 'bold 60px OpenSans';
+  ctx.font = '60px OpenSans';
   ctx.fillText(`₹ ${dataObj.price}`, textX, textY + 10);
   ctx.fillText(`₹ ${dataObj.price}`, textX + 1, textY + 10); // Extra bold effect
 
   // ID (split into first 6 and last 6 characters)
-  ctx.font = 'bold 38px OpenSans';
+  ctx.font = '38px OpenSans';
   const id = dataObj.id.toString();
   const shortId = `${id.slice(0, 6)}-${id.slice(-6)}`;  // Combine with hyphen
 
@@ -120,14 +120,8 @@ async function generateTagImage(dataObj, tagDir) {
   ctx.fillText(shortId, textX + 1, textY); // Extra bold effect
   ctx.fillText(shortId, textX, textY + 1); // Shadow effect
 
-
-  textY += 40;
-  ctx.fillText(idLine2, textX, textY);
-  ctx.fillText(idLine2, textX + 1, textY);
-  ctx.fillText(idLine2, textX, textY + 1);
-
   // Code (in 1 line)
-  ctx.font = 'bold 32px OpenSans';
+  ctx.font = '32px OpenSans';
   textY += 42;
   ctx.fillText(`Code: ${dataObj.code}`, textX, textY);
   ctx.fillText(`Code: ${dataObj.code}`, textX + 1, textY);
@@ -164,8 +158,6 @@ async function generateTagImage(dataObj, tagDir) {
     out.on('error', reject);
   });
 }
-
-
 
 // Tag generator form page
 router.get('/', async (req, res) => {
