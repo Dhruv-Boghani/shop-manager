@@ -15,13 +15,13 @@ const weekDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Frida
 
 // Upload schedule per day (HH:mm format)
 const uploadSchedule = {
-  Sunday:    ["08:15", "11:45", "15:30", "19:00", "21:30"],
-  Monday:    ["07:30", "10:00", "13:00", "17:10", "20:20"],
-  Tuesday:   ["08:00", "11:10", "14:15", "18:45", "21:00"],
-  Wednesday: ["07:50", "10:45", "13:20", "16:30"],
-  Thursday:  ["08:20", "11:30", "14:45", "17:15", "20:45", "22:00"],
-  Friday:    ["08:05", "11:00", "13:50", "16:40", "20:30"],
-  Saturday:  ["07:40", "10:20", "12:50", "16:00", "19:30"]
+  Sunday: ["07:15", "11:45", "16:30"],
+  Monday: ["06:35", "11:00", "15:50", "20:45"],
+  Tuesday: ["08:00", "12:00", "17:00"],
+  Wednesday: ["07:30", "11:30", "16:20", "21:00"],
+  Thursday: ["07:10", "12:10", "18:00"],
+  Friday: ["06:50", "11:15", "15:45", "20:15"],
+  Saturday: ["08:20", "13:00", "18:10"]
 };
 
 // Store references to active cron jobs
@@ -68,7 +68,7 @@ function startPingAndUploadFlow() {
 }
 
 // Main exported function
-function kanishka__07__() {
+function movie_clip() {
   console.log("🚀 Scheduler initialized. Will set upload tasks daily at 6 AM India time.");
 
   // Function to schedule today's tasks
@@ -100,4 +100,4 @@ function kanishka__07__() {
 }
 
 
-module.exports = { kanishka__07__ };
+module.exports = { movie_clip };

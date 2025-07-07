@@ -7,8 +7,13 @@ const cookieParser = require('cookie-parser');
 const expressLayouts = require('express-ejs-layouts');
 require('dotenv').config();
 const { connectToWhatsApp } = require('./controler/whatsappClient');
-const { kanishka__07__ } = require('./controler/kanishka__07__');
-const { echonights__07__ } = require('./controler/echonights__07__');
+const { ai_king } = require('./controler/ai_king');
+const { cartoon } = require('./controler/cartoon');
+const { motivate_english } = require('./controler/motivate_english');
+const { motivate_hindi } = require('./controler/motivate_hindi');
+const { movie_clip } = require('./controler/movie_clip');
+const { nature } = require('./controler/nature');
+const { real_beauty } = require('./controler/real_beauty');
 
 const corsConfig = {
   origin: "*",
@@ -67,8 +72,13 @@ app.use('/assign', require('./routes/shop/assign'));
 
 //connection
 // connectToWhatsApp(); // call this at startup
-kanishka__07__();
-// echonights__07__();
+ai_king();
+cartoon();
+motivate_english();
+motivate_hindi();
+movie_clip();
+nature();
+real_beauty();
 
 mongoose.connect(MONGO_URI)
   .then(() => {
