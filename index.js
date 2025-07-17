@@ -72,13 +72,15 @@ app.use('/assign', require('./routes/shop/assign'));
 
 //connection
 // connectToWhatsApp(); // call this at startup
-ai_king();
-cartoon();
-motivate_english();
-motivate_hindi();
-movie_clip();
-nature();
-real_beauty();
+
+// insta call functions
+// ai_king();
+// cartoon();
+// motivate_english();
+// motivate_hindi();
+// movie_clip();
+// nature();
+// real_beauty();
 
 mongoose.connect(MONGO_URI)
   .then(() => {
