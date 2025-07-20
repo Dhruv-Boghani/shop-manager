@@ -74,13 +74,13 @@ app.use('/assign', require('./routes/shop/assign'));
 // connectToWhatsApp(); // call this at startup
 
 // insta call functions
-// ai_king();
-// cartoon();
-// motivate_english();
-// motivate_hindi();
-// movie_clip();
-// nature();
-// real_beauty();
+ai_king();
+cartoon();
+motivate_english();
+motivate_hindi();
+movie_clip();
+nature();
+real_beauty();
 
 mongoose.connect(MONGO_URI)
   .then(() => {

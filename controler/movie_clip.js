@@ -15,13 +15,13 @@ const weekDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Frida
 
 // Upload schedule per day (HH:mm format)
 const uploadSchedule = {
-  Sunday: ["07:15", "11:45", "16:30"],
-  Monday: ["06:35", "11:00", "15:50", "20:45"],
-  Tuesday: ["08:00", "12:00", "17:00"],
-  Wednesday: ["07:30", "11:30", "16:20", "21:00"],
-  Thursday: ["07:10", "12:10", "18:00"],
-  Friday: ["06:50", "11:15", "15:45", "20:15"],
-  Saturday: ["08:20", "13:00", "18:10"]
+  Sunday: ["07:15", "16:30"],
+  Monday: ["06:35", "20:45"],
+  Tuesday: ["08:00", "17:00"],
+  Wednesday: ["07:30", "21:00"],
+  Thursday: ["07:10", "18:00"],
+  Friday: ["06:50", "20:15"],
+  Saturday: ["08:20", "18:10"]
 };
 
 // Store references to active cron jobs
