@@ -9,7 +9,7 @@ require('dotenv').config();
 
 
 const router = express.Router();
-const jwtSecrate = "DhruvBoghani624@#";
+const jwtSecrate = process.env.jwtSecrate;
 
 // Setup nodemailer
 const transporter = nodemailer.createTransport({

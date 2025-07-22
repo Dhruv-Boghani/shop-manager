@@ -9,7 +9,7 @@ const jwt = require("jsonwebtoken");
 const { sendBillToCustomer } = require('../../controler/whatsapp');
 
 const router = express.Router();
-const jwtSecrate = "DhruvBoghani624@#";
+const jwtSecrate = process.env.jwtSecrate;
 
 const validateBill = [
   body("tagIds").isArray({ min: 1 }).withMessage("At least one tag is required"),

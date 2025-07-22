@@ -7,7 +7,8 @@ const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 
 const router = express.Router();
-const jwtSecret = "DhruvBoghani624@#"
+const jwtSecrate = process.env.jwtSecrate;
+
 const validateShop = [
   body('name').notEmpty().withMessage('Name is required'),
   body('address').notEmpty().withMessage('Address is required'),

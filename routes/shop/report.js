@@ -5,11 +5,12 @@ const Tag = require('../../model/Tag');
 const jwt = require('jsonwebtoken');
 
 const router = express.Router();
+const jwtSecrate = process.env.jwtSecrate;
 
 router.get('/', async (req, res) => {
   try {
     const token = req.cookies.token;
-    const tokenData = jwt.verify(token, 'DhruvBoghani624@#'); // Replace with your secret key
+    const tokenData = jwt.verify(token, jwtSecrate); // Replace with your secret key
     if (tokenData.role !== 'admin') {
       return res.render('pages/error', {
         message: 'Only admin can see all shop reports',

@@ -6,6 +6,8 @@ const User = require('../../model/User');
 const Shop = require('../../model/Shop');
 const jwt = require('jsonwebtoken');
 
+const jwtSecrate = process.env.jwtSecrate;
+
 // GET: Show all bills
 router.get('/', async (req, res) => {
   try {
@@ -21,7 +23,7 @@ router.get('/edit/:id', async (req, res) => {
   try {
     const bill = await Bill.findById(req.params.id);
     const token = req.cookies.token;
-    const tokenData = jwt.verify(token, 'DhruvBoghani624@#');
+    const tokenData = jwt.verify(token, jwtSecrate);
 
     if (!tokenData || (tokenData.role !== 'admin' && tokenData.role !== 'manager')) {
       return res.render('pages/error', {

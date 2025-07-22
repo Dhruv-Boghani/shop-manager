@@ -7,20 +7,20 @@ require('dotenv').config();
 
 
 const router = express.Router();
+const jwtSecrate = process.env.jwtSecrate;
 
 function formatEmail(email) {
     const cleaned = email.trim().toLowerCase();
     const capitalized = cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
     return capitalized;
-  }
-  
+}
+
 
 const validateLogin = [
     body('email').isEmail().withMessage('Not a valid e-mail address'),
     body('password').isLength({ min: 8 }).withMessage('Password must be at least 8 characters long'),
 ];
 
-const jwtSecrate = "DhruvBoghani624@#";
 
 router.get('/', (req, res) => {
     res.render('pages/login');

@@ -4,10 +4,12 @@ const Shop = require('../../model/Shop');
 const User = require('../../model/User');
 const jwt = require('jsonwebtoken');
 
+const jwtSecrate = process.env.jwtSecrate;
+
 // Step 1: Show Assign Page with Shop Selection
 router.get('/', async (req, res) => {
   const token = req.cookies.token;
-      const tokenData = jwt.verify(token, 'DhruvBoghani624@#'); // Replace with your secret key
+      const tokenData = jwt.verify(token, jwtSecrate); // Replace with your secret key
       if (tokenData.role !== 'admin') {
         return res.render('pages/error', {
           message: 'Only admin can access the assign page',

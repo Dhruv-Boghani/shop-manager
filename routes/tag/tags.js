@@ -8,6 +8,7 @@ const User = require('../../model/User');
 const Shop = require('../../model/Shop');
 
 const router = express.Router();
+const jwtSecrate = process.env.jwtSecrate;
 
 const ITEMS_PER_PAGE = 50;
 
@@ -18,7 +19,7 @@ router.get('/', async (req, res) => {
   const skip = (page - 1) * ITEMS_PER_PAGE;
 
   try {
-    const tokenData = jwt.verify(token, 'DhruvBoghani624@#');
+    const tokenData = jwt.verify(token, jwtSecrate);
     let filter = {};
     let shopName = null;
 

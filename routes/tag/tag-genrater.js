@@ -9,6 +9,7 @@ const path = require('path');
 const { createCanvas, loadImage, registerFont } = require('canvas');
 const { PDFDocument } = require('pdf-lib');
 const jwt = require('jsonwebtoken');
+const jwtSecrate = process.env.jwtSecrate;
 
 const Tag = require('../../model/Tag');
 const Product = require('../../model/Product');
@@ -163,7 +164,7 @@ async function generateTagImage(dataObj, tagDir) {
 router.get('/', async (req, res) => {
   try {
     const token = req.cookies.token;
-    const tokenData = jwt.verify(token, 'DhruvBoghani624@#');
+    const tokenData = jwt.verify(token, jwtSecrate);
 
     if (tokenData.role !== 'admin') {
       return res.render('pages/error', {

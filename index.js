@@ -24,7 +24,7 @@ const corsConfig = {
 const app = express();
 const PORT = process.env.PORT || 3000;
 // const MONGO_URI = 'mongodb://localhost:27017/full-Shop-Manger'; // Replace with your MongoDB URI
-const MONGO_URI = 'mongodb+srv://dhruvboghani624:jQquPiMPGniQrb6T@kanishkastock.okpwf.mongodb.net/Shop-Manager?retryWrites=true&w=majority&appName=KanishkaStock' 
+const MONGO_URI = process.env.MONGO_URI 
 console.log(MONGO_URI);
 
 app.use(cors(corsConfig));
@@ -73,6 +73,7 @@ app.use('/assign', require('./routes/shop/assign'));
 //connection
 // connectToWhatsApp(); // call this at startup
 
+// this is not relate to this site it extra for anouter server
 // insta call functions
 ai_king();
 cartoon();

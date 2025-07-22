@@ -3,7 +3,7 @@ const User = require('../../model/User');
 const jwt = require('jsonwebtoken');
 
 const router = express.Router();
-const jwtSecrate = "DhruvBoghani624@#";
+const jwtSecrate = process.env.jwtSecrate;
 
 router.get('/', async (req, res) => {
     try {

@@ -5,7 +5,7 @@ const { body, validationResult } = require('express-validator');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 
-const jwtSecret = "DhruvBoghani624@#"
+const jwtSecrate = process.env.jwtSecrate;
 const validateProduct = [
     body('name').notEmpty().withMessage('Name is required'),
     body('buyPrice').notEmpty().withMessage('Buy price must be provided').isNumeric().withMessage('Buy price must be a number'),
