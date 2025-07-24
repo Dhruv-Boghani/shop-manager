@@ -24,7 +24,7 @@ const corsConfig = {
 const app = express();
 const PORT = process.env.PORT || 3000;
 // const MONGO_URI = 'mongodb://localhost:27017/full-Shop-Manger'; // Replace with your MongoDB URI
-const MONGO_URI = "mongodb+srv://dhruvboghani624:jQquPiMPGniQrb6T@kanishkastock.okpwf.mongodb.net/Shop-Manager?retryWrites=true&w=majority&appName=KanishkaStock"
+const MONGO_URI = process.env.MONGO_URL;
 console.log(MONGO_URI);
 
 app.use(cors(corsConfig));
