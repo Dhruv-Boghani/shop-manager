@@ -4,6 +4,7 @@ const Tag = require('../../model/Tag');
 const { body, validationResult } = require('express-validator');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 const jwtSecrate = process.env.jwtSecrate;
 const validateProduct = [
@@ -16,14 +17,15 @@ const validateProduct = [
 router.get('/', async (req, res) => {
     try {
         const token = req.cookies.token;
-            const tokenData = jwt.verify(token, 'DhruvBoghani624@#'); // Replace with your secret key
-            if (tokenData.role !== 'admin') {
-              return res.render('pages/error', {
+        const tokenData = jwt.verify(token, jwtSecrate); // Replace with your secret key
+        console.log(tokenData);
+        if (tokenData.role !== 'admin') {
+            return res.render('pages/error', {
                 message: 'Only admin can access the product page',
                 error: null
-              });
-            }
-        const data = jwt.verify(req.cookies.token, jwtSecret);
+            });
+        }
+        const data = jwt.verify(req.cookies.token, jwtSecrate);
         if (['admin', 'manager', 'seller', 'user'].includes(data.role)) {
             const query = req.query.search || '';
             let products = [];
@@ -72,7 +74,7 @@ router.post('/delete/:id', async (req, res) => {
         return res.render('pages/error', {
             message: 'Cannot delete product with associated tags',
             error: null
-          });
+        });
     }
     await Product.findByIdAndDelete(req.params.id);
     res.redirect('/product'); // or wherever your listing is
