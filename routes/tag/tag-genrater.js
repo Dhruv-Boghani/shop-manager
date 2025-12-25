@@ -14,12 +14,12 @@ const jwtSecrate = process.env.jwtSecrate;
 const Tag = require('../../model/Tag');
 const Product = require('../../model/Product');
 const Shop = require('../../model/Shop');
+const { log } = require('console');
 
-// ✅ Register custom font (must be done before any canvas operations)
 registerFont(path.join(__dirname, '../../fonts/OpenSans-Regular.ttf'), {
   family: 'OpenSans',
+  weight: 'normal',
 });
-
 
 mongoose.set('strictPopulate', false);
 
@@ -36,7 +36,7 @@ async function fetchDetails(productId, shopId, tagId, qrCode, barcode) {
   if (!product || !shop) throw new Error('Invalid Product or Shop');
 
   // Get the current date in the format DD.MM.YY
-  const currentDate = new Date(product.createdAt);
+  const currentDate = new Date();
   const day = String(currentDate.getDate()).padStart(2, '0');
   const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // months are 0-indexed
   const year = String(currentDate.getFullYear()).slice(-2); // get last 2 digits of the year
@@ -77,9 +77,17 @@ function drawWrappedText(ctx, text, x, y, maxWidth, lineHeight) {
 }
 
 async function generateTagImage(dataObj, tagDir) {
-  const canvasWidth = mmToPx(50);
-  const canvasHeight = mmToPx(25);
-  const qrSize = mmToPx(22);
+  // --- CONFIGURATION ---
+  const tagWidth = 52.5;
+  const tagHeight = 21.2;
+  const borderPad = 1; // 1mm border
+
+  const canvasWidth = mmToPx(tagWidth);
+  const canvasHeight = mmToPx(tagHeight);
+  const padding = mmToPx(borderPad);
+
+  // QR Size: 18mm (Kept same to preserve aspect ratio)
+  const qrSize = mmToPx(18);
 
   const canvas = createCanvas(canvasWidth, canvasHeight);
   const ctx = canvas.getContext('2d');
@@ -88,49 +96,62 @@ async function generateTagImage(dataObj, tagDir) {
   ctx.fillStyle = 'white';
   ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
-  // Load QR and barcode images
+  // Load Images
   const [qrImg, barcodeImg] = await Promise.all([
     loadImage(dataObj.qrCode),
     loadImage(dataObj.barcode),
   ]);
 
-  // Draw QR Code
-  const qrX = 0;
+  // --- DRAWING LOGIC ---
+
+  // 1. Draw QR Code (Vertically Centered)
+  const qrX = padding;
   const qrY = (canvasHeight - qrSize) / 2;
   ctx.drawImage(qrImg, qrX, qrY, qrSize, qrSize);
 
-  // Text block
-  const textX = qrX + qrSize + mmToPx(1);
-  let textY = qrY + mmToPx(2.5);
+  // 2. Text Configuration
+  // Start text slightly earlier horizontally if needed, or keep standard gap
+  const textX = qrX + qrSize + mmToPx(1.5);
 
-  // Price
+  // Start drawing slightly higher to accommodate larger font
+  // Changed from 4mm to 3.5mm top offset
+  let textY = padding + mmToPx(3.5);
+
   ctx.fillStyle = 'black';
-  ctx.font = '60px OpenSans';
-  ctx.fillText(`₹ ${dataObj.price}`, textX, textY + 10);
-  ctx.fillText(`₹ ${dataObj.price}`, textX + 1, textY + 10); // Extra bold effect
 
-  // ID (split into first 6 and last 6 characters)
-  ctx.font = '38px OpenSans';
+  // --- Price (Significantly Larger) ---
+  // Increased from 50px to 58px
+  ctx.font = '58px OpenSans';
+  ctx.fillText(`₹ ${dataObj.price}`, textX, textY);
+  ctx.fillText(`₹ ${dataObj.price}`, textX + 1, textY); // Extra bold
+
+  // --- ID (Larger) ---
+  // Increased from 32px to 40px
+  ctx.font = '40px OpenSans';
   const id = dataObj.id.toString();
-  const shortId = `${id.slice(0, 6)}-${id.slice(-6)}`;  // Combine with hyphen
+  const shortId = `${id.slice(0, 6)}-${id.slice(-6)}`;
 
-  textY += 64;
+  // Increased spacing from 45 to 52 to prevent overlap
+  textY += 52;
 
-  // Draw with shadow effect and bold outline
   ctx.fillText(shortId, textX, textY);
-  ctx.fillText(shortId, textX + 1, textY); // Extra bold effect
-  ctx.fillText(shortId, textX, textY + 1); // Shadow effect
+  ctx.fillText(shortId, textX + 1, textY); // Bold
+  ctx.fillText(shortId, textX, textY + 1); // Shadow
 
-  // Code (in 1 line)
-  ctx.font = '32px OpenSans';
-  textY += 42;
+  // --- Code (Slightly Larger) ---
+  // Increased from 26px to 30px
+  ctx.font = '30px OpenSans';
+
+  // Increased spacing from 32 to 38
+  textY += 38;
+
   ctx.fillText(`Code: ${dataObj.code}`, textX, textY);
   ctx.fillText(`Code: ${dataObj.code}`, textX + 1, textY);
-  ctx.fillText(`Code: ${dataObj.code}`, textX, textY + 1);
 
-  // Barcode at bottom right
-  const maxBarcodeWidth = mmToPx(28);
-  const maxBarcodeHeight = mmToPx(5);
+  // 3. Barcode (Bottom Right)
+  const maxBarcodeWidth = mmToPx(24);
+  const maxBarcodeHeight = mmToPx(4.5);
+
   let barcodeRatio = barcodeImg.width / barcodeImg.height;
   let finalBarcodeWidth = maxBarcodeWidth;
   let finalBarcodeHeight = finalBarcodeWidth / barcodeRatio;
@@ -140,8 +161,9 @@ async function generateTagImage(dataObj, tagDir) {
     finalBarcodeWidth = finalBarcodeHeight * barcodeRatio;
   }
 
-  const barcodeX = canvasWidth - finalBarcodeWidth - mmToPx(1);
-  const barcodeY = canvasHeight - finalBarcodeHeight - mmToPx(1);
+  const barcodeX = canvasWidth - finalBarcodeWidth - padding;
+  const barcodeY = canvasHeight - finalBarcodeHeight - padding;
+
   ctx.drawImage(barcodeImg, barcodeX, barcodeY, finalBarcodeWidth, finalBarcodeHeight);
 
   // Save PNG
@@ -152,8 +174,12 @@ async function generateTagImage(dataObj, tagDir) {
 
   return new Promise((resolve, reject) => {
     out.on('finish', () => {
-      fs.unlinkSync(dataObj.qrCode);
-      fs.unlinkSync(dataObj.barcode);
+      try {
+        if (fs.existsSync(dataObj.qrCode)) fs.unlinkSync(dataObj.qrCode);
+        if (fs.existsSync(dataObj.barcode)) fs.unlinkSync(dataObj.barcode);
+      } catch (e) {
+        console.error("Error cleaning up temp files:", e);
+      }
       resolve(tagPath);
     });
     out.on('error', reject);
